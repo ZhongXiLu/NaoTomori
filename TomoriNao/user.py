@@ -20,7 +20,7 @@ class User(commands.Cog):
             self.user = user
             self.channel = ctx.channel
             self.bot.get_cog('Anime').watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
-            self.bot.get_cog('Anime').checkNewAnime.start()
+            self.bot.get_cog('Anime').checkNewAnimeLoop.start()
             await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
         except jikanpy.exceptions.APIException:
