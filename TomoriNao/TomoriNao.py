@@ -12,6 +12,7 @@ bot.add_cog(Anime(bot))
 async def on_ready():
     print("Bot is running!")
     await bot.change_presence(activity=discord.Game(name="Running!"))
+    bot.get_cog('Anime').cacheAnime()
 
 
 @bot.command()
