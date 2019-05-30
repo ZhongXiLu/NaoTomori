@@ -2,7 +2,7 @@
 
 class Cache(list):
 
-    def __init__(self, size=8):
+    def __init__(self, size=16):
         super(Cache, self).__init__()
         if size > 0:
             self.size = size

@@ -1,3 +1,4 @@
+import copy
 
 import asynctest
 from asyncio import Future
@@ -25,6 +26,9 @@ class TestUserCache(asynctest.TestCase):
         with open('test_data/9anime_2.html') as file:
             tree = html.fromstring(file.read())
             cls.animes2 = cls.anime.findAnimeElements(tree)
+
+    def tearDown(self):
+        self.anime.cachedAnimes = []
 
     def test_findAnime(self):
         """Test finding the anime elements on a 9anime html page"""
@@ -64,8 +68,15 @@ class TestUserCache(asynctest.TestCase):
 
         self.anime.getRecentAnime = MagicMock(return_value=self.animes1)
         self.anime.cacheAnime()
-        self.assertEqual(len(self.anime.cachedAnimes), 8)
+        self.assertEqual(len(self.anime.cachedAnimes), 15)
         self.assertEqual(self.anime.cachedAnimes, [
+            'Kono Yo no Hate de Koi wo Utau Shoujo YU-NO (Dub)',
+            'Shinkansen Henkei Robo Shinkalion The Animation',
+            'Mitsuboshi Colors (Dub)',
+            'Xia Gan Yi Dan Shen Jianxin',
+            'Yu☆Gi☆Oh! VRAINS',
+            'Tate no Yuusha no Nariagari',
+            'Sewayaki Kitsune no Senko-san',
             'Tate no Yuusha no Nariagari (Dub)',
             'Kenja no Mago',
             'Sewayaki Kitsune no Senko-san (Dub)',
@@ -81,7 +92,8 @@ class TestUserCache(asynctest.TestCase):
 
         self.anime.getRecentAnime = MagicMock(return_value=self.animes1)
         self.anime.cacheAnime()
-        self.assertEqual(len(self.anime.cachedAnimes), 8)
+        oldCache = copy.deepcopy(self.anime.cachedAnimes)
+        self.assertEqual(len(self.anime.cachedAnimes), 15)
 
         # This allows mocking async methods, thanks to https://stackoverflow.com/a/46326234 :)
         f = Future()
@@ -91,6 +103,7 @@ class TestUserCache(asynctest.TestCase):
         self.anime.sendPing = MagicMock(return_value=f)
         await self.anime.checkNewAnime()
         self.anime.sendPing.assert_not_called()
+        self.assertEqual(self.anime.cachedAnimes, oldCache)
 
         # User is watching 'One Punch Man 2nd Season' => should receive one ping
         self.anime.watching.append({
@@ -98,6 +111,7 @@ class TestUserCache(asynctest.TestCase):
             'image_url': 'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
         })
         self.anime.getRecentAnime = MagicMock(return_value=self.animes2)    # has latest ep of OPM S2
+        oldCache = copy.deepcopy(self.anime.cachedAnimes)
 
         self.anime.sendPing = MagicMock(return_value=f)
         await self.anime.checkNewAnime()
@@ -108,3 +122,6 @@ class TestUserCache(asynctest.TestCase):
             'https://www1.9anime.nl/watch/one-punch-man-2nd-season.qqmj',
             'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
         )
+        self.assertNotEqual(self.anime.cachedAnimes, oldCache)
+        self.assertEqual(self.anime.cachedAnimes[-1], 'One Punch Man 2nd Season')
+

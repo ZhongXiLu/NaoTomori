@@ -41,11 +41,12 @@ class Anime(commands.Cog):
         embed = discord.Embed(title=title, description=count, color=0xeee657)
         embed.add_field(name="Link", value=f"[{link}]({link})")
         embed.set_thumbnail(url=image)
-        await self.channel.send(embed=embed)
+        await self.bot.get_cog('user').channel.send(embed=embed)
 
     async def checkNewAnime(self):
         animes = self.getRecentAnime()
         if animes:
+            animes.reverse()
             for anime in animes:
                 # Get the title
                 query = anime.xpath(
@@ -54,13 +55,12 @@ class Anime(commands.Cog):
                 if title:
                     # Check if anime is in currently watching list
                     for watching in self.watching:
-                        if title == watching['title'] and title not in self.cachedAnimes:
+                        if title not in self.cachedAnimes:
                             self.cachedAnimes.append(title)
-                            ep = anime.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' ep ')]")[0]
-                            link = \
-                            anime.xpath("*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@href")[
-                                0]
-                            await self.sendPing(title, ep.text_content(), link, watching['image_url'])
+                            if title == watching['title']:
+                                ep = anime.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' ep ')]")[0]
+                                link = anime.xpath("*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@href")[0]
+                                await self.sendPing(title, ep.text_content(), link, watching['image_url'])
         else:
             print(f'Failed retrieving data from 9anime')
 
