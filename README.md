@@ -9,7 +9,6 @@ And yes, Tomori Nao is my waifu.
 Before running setting up, make sure you are using python3.7.
 
 ```bash
-pip install git+git://github.com/AWConant/jikanpy.git
 pip install -r requirements.txt
 export DISCORD_CLIENT_TOKEN=<TOKEN>
 python main.py
