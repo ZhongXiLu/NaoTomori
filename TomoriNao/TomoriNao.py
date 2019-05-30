@@ -2,10 +2,11 @@
 import discord
 from discord.ext import commands
 
-from TomoriNao.anime import Anime
+from TomoriNao import anime, user
 
 bot = commands.Bot(command_prefix='!')
-bot.add_cog(Anime(bot))
+bot.add_cog(user.User(bot))
+bot.add_cog(anime.Anime(bot))
 
 
 @bot.event

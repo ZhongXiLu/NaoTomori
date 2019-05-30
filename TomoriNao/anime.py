@@ -1,52 +1,18 @@
 
 import discord
-import jikanpy
 import requests
 from discord.ext import tasks, commands
-from jikanpy import Jikan
-from lxml import html, etree
+from lxml import html
 
-
-# we can use this cache to check whether an anime was just released
-class CachedAnimes(list):
-
-    def append(self, item):
-        super(CachedAnimes, self).append(item)
-        if len(self) > 8:
-            self.pop(0)
+from TomoriNao.cache import Cache
 
 
 class Anime(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.user = None
         self.watching = []
-        self.channel = None
-        self.cachedAnimes = CachedAnimes()
-        self.jikan = Jikan()
-
-    @commands.command()
-    async def setProfile(self, ctx, profile: str):
-        try:
-            user = self.jikan.user(username=profile)
-            self.user = user
-            self.watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
-            self.channel = ctx.channel
-            self.checkNewAnime.start()
-            await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
-
-        except jikanpy.exceptions.APIException:
-            await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
-
-    @commands.command()
-    async def setChannel(self, ctx, channel: discord.TextChannel):
-        self.channel = channel
-        await ctx.send(f'Successfully set bot channel to {channel.mention}.')
-
-    @setChannel.error
-    async def setChannelError(self, ctx, error):
-        await ctx.send(error.args[0])
+        self.cachedAnimes = Cache()     # we can use this cache to check whether an anime was just released
 
     def getAnime(self):
         with requests.Session() as session:
