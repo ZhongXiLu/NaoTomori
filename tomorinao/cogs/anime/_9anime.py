@@ -21,6 +21,7 @@ class _9Anime:
         # Get all the anime html elements from the 9anime homepage
         animeElements = []
         with requests.Session() as session:
+            session.headers = {'User-Agent': 'Mozilla/5.0'}
             response = session.get('https://www1.9anime.nl/home')
             print(f'response status code from 9anime: {response.status_code}')
             if response.status_code == 200:
