@@ -23,8 +23,16 @@ class UserCog(commands.Cog):
             user = self.jikan.user(username=profile)
             self.user = user
             self.channel = ctx.channel
-            self.bot.get_cog('AnimeCog').watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
-            self.bot.get_cog('MangaCog').reading = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
+
+            animes = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
+            for anime in animes:
+                anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
+                self.bot.get_cog('AnimeCog').watching.append(anime)
+            mangas = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
+            for manga in mangas:
+                manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
+                self.bot.get_cog('MangaCog').reading.append(manga)
+
             self.bot.get_cog('AnimeCog').checkNewAnimeLoop.start()
             self.bot.get_cog('MangaCog').checkNewMangaLoop.start()
             await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')

@@ -30,13 +30,12 @@ class MangaCog(commands.Cog):
 
     async def checkNewManga(self):
         mangas = self.manga.getRecentManga()
-        print(mangas)
         for manga in mangas:
             if manga.title not in self.cachedMangas:
                 self.cachedMangas.append(manga.title)
                 # Check if manga is in currently reading list
                 for reading in self.reading:
-                    if manga.title == reading['title']:
+                    if manga.title == reading['title'] or manga.title == reading['title_english']:
                         await self.sendPing(manga.title, manga.ep, manga.link, reading['image_url'])
 
     @tasks.loop(minutes=1)

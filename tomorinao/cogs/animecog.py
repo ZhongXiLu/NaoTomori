@@ -35,7 +35,7 @@ class AnimeCog(commands.Cog):
                 self.cachedAnimes.append(anime.title)
                 # Check if anime is in currently watching list
                 for watching in self.watching:
-                    if anime.title == watching['title']:
+                    if anime.title == watching['title'] or anime.title == watching['title_english']:
                         await self.sendPing(anime.title, anime.ep, anime.link, watching['image_url'])
 
     @tasks.loop(minutes=1)

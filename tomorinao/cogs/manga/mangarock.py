@@ -8,7 +8,7 @@ from .manga import Manga
 class MangaRock:
 
     def __init__(self):
-        self.url = 'https://mangarock.com/'
+        self.url = 'https://mangarock.com'
 
     def _findMangaElements(self, tree):
         return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' _1cii_ ')]")

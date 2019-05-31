@@ -74,6 +74,7 @@ class TestAnimeCog(asynctest.TestCase):
         # User is watching 'One Punch Man 2nd Season' => should receive one ping
         self.animeCog.watching.append({
             'title': 'One Punch Man 2nd Season',
+            'title_english': 'One Punch-Man 2',
             'image_url': 'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
         })
         self.animeCog.anime._findAnimeElements = MagicMock(return_value=self.animes2)    # has latest ep of OPM S2

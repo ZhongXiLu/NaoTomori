@@ -31,3 +31,5 @@ Currently, it uses [9anime](https://www1.9anime.nl/home) to check for updates an
 1. Write a class in the `tomorinao.cogs.anime` module
 2. Add a `getRecentAnime()` method to it
 3. Replace the `self.anime` attribute in the `AnimeCog` with your custom api
+
+Same applies to [MangaRock](https://mangarock.com/) as the manga api.
