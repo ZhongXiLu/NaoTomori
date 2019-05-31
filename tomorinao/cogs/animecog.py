@@ -30,7 +30,6 @@ class AnimeCog(commands.Cog):
 
     async def checkNewAnime(self):
         animes = self.anime.getRecentAnime()
-        # print(f'received animes: {animes}')
         for anime in animes:
             if anime.title not in self.cachedAnimes:
                 self.cachedAnimes.append(anime.title)
