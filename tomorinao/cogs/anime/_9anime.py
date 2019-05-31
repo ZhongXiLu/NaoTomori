@@ -23,9 +23,9 @@ class _9Anime:
         with requests.Session() as session:
             session.headers = {'User-Agent': 'Mozilla/5.0'}
             response = session.get('https://www1.9anime.nl/home')
-            print(f'response status code from 9anime: {response.status_code}')
-            print(f'request headers: {response.request.headers}')
-            print(f'response: {response.text}')
+            # print(f'response status code from 9anime: {response.status_code}')
+            # print(f'request headers: {response.request.headers}')
+            # print(f'response: {response.text}')
             if response.status_code == 200:
                 tree = html.fromstring(response.text)
                 # Get all the recent anime's
