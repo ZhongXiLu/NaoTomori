@@ -30,14 +30,18 @@ class AnimeCog(commands.Cog):
 
     async def checkNewAnime(self):
         animes = self.anime.getRecentAnime()
-        for anime in animes:
-            if anime.title not in self.cachedAnimes:
-                self.cachedAnimes.append(anime.title)
-                # Check if anime is in currently watching list
-                for watching in self.watching:
-                    if anime.title == watching['title'] or anime.title == watching['title_english']:
-                        await self.sendPing(anime.title, anime.ep, anime.link, watching['image_url'])
+        if animes:
+            for anime in animes:
+                if anime.title not in self.cachedAnimes:
+                    print(f'New anime: {anime.title}')
+                    self.cachedAnimes.append(anime.title)
+                    # Check if anime is in currently watching list
+                    for watching in self.watching:
+                        if anime.title == watching['title'] or anime.title == watching['title_english']:
+                            await self.sendPing(anime.title, anime.ep, anime.link, watching['image_url'])
+        else:
+            print('Failed retrieving new anime')
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=5)
     async def checkNewAnimeLoop(self):
         await self.checkNewAnime()

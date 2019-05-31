@@ -34,8 +34,9 @@ class _9Anime:
             query = animeElement.xpath(
                 "*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@data-jtitle")
             title = query[0] if len(query) > 0 else None
+            query = animeElement.xpath(".//div[contains(concat(' ', normalize-space(@class), ' '), ' ep ')]")
+            ep = query[0].text_content() if len(query) > 0 else None
             if title:
-                ep = animeElement.xpath(".//div[contains(concat(' ', normalize-space(@class), ' '), ' ep ')]")[0].text_content()
                 link = animeElement.xpath("*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@href")[0]
                 animes.append(Anime(title=title, ep=ep, link=link))
 

@@ -38,6 +38,6 @@ class MangaCog(commands.Cog):
                     if manga.title == reading['title'] or manga.title == reading['title_english']:
                         await self.sendPing(manga.title, manga.ep, manga.link, reading['image_url'])
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=5)
     async def checkNewMangaLoop(self):
         await self.checkNewManga()
