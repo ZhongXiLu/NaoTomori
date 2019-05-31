@@ -34,7 +34,7 @@ class UserCog(commands.Cog):
     async def getProfile(self, ctx):
         if self.user:
             embed = discord.Embed(title=self.user['username'], color=discord.Color.green())
-            embed.add_field(name="Watching", value=str(len(self.bot.get_cog('Anime').watching)))
+            embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').watching)))
             embed.set_thumbnail(url=self.user['image_url'])
             await ctx.send(embed=embed)
         else:

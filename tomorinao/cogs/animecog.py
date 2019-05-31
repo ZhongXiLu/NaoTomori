@@ -18,10 +18,9 @@ class AnimeCog(commands.Cog):
 
     def fillCache(self):
         animes = self.anime.getRecentAnime()
-        if animes:
-            animes.reverse()    # make sure the most recent ones are added last to the cache
-            for anime in animes:
-                self.cachedAnimes.append(anime.title)
+        animes.reverse()    # make sure the most recent ones are added last to the cache
+        for anime in animes:
+            self.cachedAnimes.append(anime.title)
 
     async def sendPing(self, title, count, link, image):
         embed = discord.Embed(title=title, description=count, color=discord.Color.green())
@@ -31,16 +30,14 @@ class AnimeCog(commands.Cog):
 
     async def checkNewAnime(self):
         animes = self.anime.getRecentAnime()
-        if animes:
-            for anime in animes:
-                if anime.title not in self.cachedAnimes:
-                    self.cachedAnimes.append(anime.title)
-                    # Check if anime is in currently watching list
-                    for watching in self.watching:
-                        if anime.title == watching['title']:
-                            await self.sendPing(anime.title, anime.ep, anime.link, watching['image_url'])
-        else:
-            print(f'Failed retrieving data from 9anime')
+        print(animes)
+        for anime in animes:
+            if anime.title not in self.cachedAnimes:
+                self.cachedAnimes.append(anime.title)
+                # Check if anime is in currently watching list
+                for watching in self.watching:
+                    if anime.title == watching['title']:
+                        await self.sendPing(anime.title, anime.ep, anime.link, watching['image_url'])
 
     @tasks.loop(minutes=1)
     async def checkNewAnimeLoop(self):
