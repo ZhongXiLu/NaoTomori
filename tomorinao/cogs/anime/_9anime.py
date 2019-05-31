@@ -22,12 +22,14 @@ class _9Anime:
         animeElements = []
         with requests.Session() as session:
             response = session.get('https://www1.9anime.nl/home')
+            print(f'response status code from 9anime: {response.status_code}')
             if response.status_code == 200:
                 tree = html.fromstring(response.text)
                 # Get all the recent anime's
                 animeElements = self._findAnimeElements(tree)
 
         # Construct the Anime objects
+        print(f'animeElements: {animeElements}')
         for animeElement in animeElements:
             # Get the title
             query = animeElement.xpath(
