@@ -21,17 +21,8 @@ class _9Anime:
         # Get all the anime html elements from the 9anime homepage
         animeElements = []
         with requests.Session() as session:
-            session.headers = {
-                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:67.0) Gecko/20100101 Firefox/67.0',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'DNT': '1',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1'
-            }
-            response = session.get('https://www1.9anime.nl/home')
-            print(f'response status code from 9anime: {response.status_code}')
+            session.headers = {'User-Agent': 'Mozilla/5.0'}
+            response = session.get(self.url)
             if response.status_code == 200:
                 tree = html.fromstring(response.text)
                 # Get all the recent anime's

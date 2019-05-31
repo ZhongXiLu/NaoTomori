@@ -24,7 +24,9 @@ class UserCog(commands.Cog):
             self.user = user
             self.channel = ctx.channel
             self.bot.get_cog('AnimeCog').watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
+            self.bot.get_cog('MangaCog').reading = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
             self.bot.get_cog('AnimeCog').checkNewAnimeLoop.start()
+            self.bot.get_cog('MangaCog').checkNewMangaLoop.start()
             await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
         except jikanpy.exceptions.APIException:
@@ -35,6 +37,7 @@ class UserCog(commands.Cog):
         if self.user:
             embed = discord.Embed(title=self.user['username'], color=discord.Color.green())
             embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').watching)))
+            embed.add_field(name="Reading", value=str(len(self.bot.get_cog('MangaCog').reading)))
             embed.set_thumbnail(url=self.user['image_url'])
             await ctx.send(embed=embed)
         else:

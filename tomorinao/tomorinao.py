@@ -2,7 +2,7 @@
 import discord
 from discord.ext import commands
 
-from tomorinao.cogs import usercog, animecog
+from tomorinao.cogs import usercog, animecog, mangacog
 
 
 class TomoriNao(commands.Bot):
@@ -11,8 +11,10 @@ class TomoriNao(commands.Bot):
         super().__init__(*args, **kwargs)
         self.add_cog(usercog.UserCog(self))
         self.add_cog(animecog.AnimeCog(self))
+        self.add_cog(mangacog.MangaCog(self))
 
     async def on_ready(self):
         print(f"Logged in as {self.user.name}")
         await self.change_presence(activity=discord.Game(name="Running!"))
         self.get_cog('AnimeCog').fillCache()
+        self.get_cog('MangaCog').fillCache()
