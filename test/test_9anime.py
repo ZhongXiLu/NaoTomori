@@ -14,7 +14,7 @@ class Test9Anime(unittest.TestCase):
     def test_findAnimeElements(self):
         """Test getting the anime html elements from a given 9anime html file"""
 
-        with open('test_data/9anime_1.html') as file:
+        with open('test/test_data/9anime_1.html') as file:
             tree = html.fromstring(file.read())
             animes = self._9anime._findAnimeElements(tree)
             self.assertEqual(len(animes), 23)
@@ -47,7 +47,7 @@ class Test9Anime(unittest.TestCase):
     def test_getRecentAnime(self):
         """Test getting the most recent anime from the 9anime homepage"""
 
-        with open('test_data/9anime_1.html') as file:
+        with open('test/test_data/9anime_1.html') as file:
             tree = html.fromstring(file.read())
             animes = self._9anime._findAnimeElements(tree)
             self._9anime._findAnimeElements = MagicMock(return_value=animes)

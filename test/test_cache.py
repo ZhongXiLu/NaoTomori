@@ -26,7 +26,7 @@ class TestCache(unittest.TestCase):
         self.assertEqual(len(cache), 16)
         for i in range(8):
             cache.append(i)
-        self.assertEqual(len(cache), 16)    # cache still has eight elements
+        self.assertEqual(len(cache), 16)    # cache still has 16 elements
         for i in range(16, 32):
             cache.append(i)
         self.assertEqual(cache, list(range(16, 32)))     # cache should be completely overwritten

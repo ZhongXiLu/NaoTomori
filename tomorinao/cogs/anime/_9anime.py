@@ -2,7 +2,7 @@
 import requests
 from lxml import html
 
-from anime import Anime
+from .anime import Anime
 
 
 class _9Anime:
