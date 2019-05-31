@@ -67,7 +67,7 @@ class TestUserCache(asynctest.TestCase):
         """Test the initial caching"""
 
         self.anime.getRecentAnime = MagicMock(return_value=self.animes1)
-        self.anime.cacheAnime()
+        self.anime.fillCache()
         self.assertEqual(len(self.anime.cachedAnimes), 15)
         self.assertEqual(self.anime.cachedAnimes, [
             'Kono Yo no Hate de Koi wo Utau Shoujo YU-NO (Dub)',
@@ -91,7 +91,7 @@ class TestUserCache(asynctest.TestCase):
         """Test checking for new animes and make sure 'pings' are sent out correctly"""
 
         self.anime.getRecentAnime = MagicMock(return_value=self.animes1)
-        self.anime.cacheAnime()
+        self.anime.fillCache()
         oldCache = copy.deepcopy(self.anime.cachedAnimes)
         self.assertEqual(len(self.anime.cachedAnimes), 15)
 

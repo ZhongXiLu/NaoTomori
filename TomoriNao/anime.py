@@ -26,7 +26,7 @@ class Anime(commands.Cog):
                 return self.findAnimeElements(tree)
         return None
 
-    def cacheAnime(self):
+    def fillCache(self):
         animes = self.getRecentAnime()
         if animes:
             animes.reverse()
@@ -38,7 +38,7 @@ class Anime(commands.Cog):
                     self.cachedAnimes.append(title)
 
     async def sendPing(self, title, count, link, image):
-        embed = discord.Embed(title=title, description=count, color=0xeee657)
+        embed = discord.Embed(title=title, description=count, color=discord.Color.green())
         embed.add_field(name="Link", value=f"[{link}]({link})")
         embed.set_thumbnail(url=image)
         await self.bot.get_cog('user').channel.send(embed=embed)
@@ -53,10 +53,10 @@ class Anime(commands.Cog):
                     "*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@data-jtitle")
                 title = query[0] if len(query) > 0 else None
                 if title:
-                    # Check if anime is in currently watching list
-                    for watching in self.watching:
-                        if title not in self.cachedAnimes:
-                            self.cachedAnimes.append(title)
+                    if title not in self.cachedAnimes:
+                        self.cachedAnimes.append(title)
+                        # Check if anime is in currently watching list
+                        for watching in self.watching:
                             if title == watching['title']:
                                 ep = anime.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' ep ')]")[0]
                                 link = anime.xpath("*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@href")[0]

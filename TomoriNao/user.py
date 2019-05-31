@@ -27,6 +27,16 @@ class User(commands.Cog):
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
 
     @commands.command()
+    async def getProfile(self, ctx):
+        if self.user:
+            embed = discord.Embed(title=self.user['username'], color=discord.Color.green())
+            embed.add_field(name="Watching", value=str(len(self.bot.get_cog('Anime').watching)))
+            embed.set_thumbnail(url=self.user['image_url'])
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("Profile is not set, please use `!setProfile <USERNAME>` first.")
+
+    @commands.command()
     async def setChannel(self, ctx, channel: discord.TextChannel):
         self.channel = channel
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')

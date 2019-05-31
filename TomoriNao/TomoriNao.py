@@ -13,11 +13,11 @@ bot.add_cog(anime.Anime(bot))
 async def on_ready():
     print("Bot is running!")
     await bot.change_presence(activity=discord.Game(name="Running!"))
-    bot.get_cog('Anime').cacheAnime()
+    bot.get_cog('Anime').fillCache()
 
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f'Pong: {bot.latency}')
+    await ctx.send(f'Pong: {round(bot.latency*1000)}ms')
 
 
