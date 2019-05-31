@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 from discord.ext import commands
 from lxml import html
 
-from TomoriNao import anime
+from tomorinao.cogs import anime
 
 
 class TestUserCache(asynctest.TestCase):

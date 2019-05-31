@@ -4,7 +4,7 @@ import requests
 from discord.ext import tasks, commands
 from lxml import html
 
-from TomoriNao.cache import Cache
+from tomorinao.cache import Cache
 
 
 class Anime(commands.Cog):

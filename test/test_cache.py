@@ -1,7 +1,7 @@
 
 import unittest
 
-from TomoriNao.cache import Cache
+from tomorinao.cache import Cache
 
 
 class TestCache(unittest.TestCase):

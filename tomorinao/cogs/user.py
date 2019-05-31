@@ -14,6 +14,10 @@ class User(commands.Cog):
         self.jikan = Jikan()
 
     @commands.command()
+    async def ping(self, ctx):
+        await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
+
+    @commands.command()
     async def setProfile(self, ctx, profile: str):
         try:
             user = self.jikan.user(username=profile)
