@@ -21,16 +21,16 @@ class _9Anime:
         # Get all the anime html elements from the 9anime homepage
         animeElements = []
         with requests.Session() as session:
-            session.headers = {'User-Agent': 'Mozilla/5.0'}
+            session.headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:67.0) Gecko/20100101 Firefox/67.0'}
             response = session.get('https://www1.9anime.nl/home')
             print(f'response status code from 9anime: {response.status_code}')
+            print(f'request headers: {response.headers}')
             if response.status_code == 200:
                 tree = html.fromstring(response.text)
                 # Get all the recent anime's
                 animeElements = self._findAnimeElements(tree)
 
         # Construct the Anime objects
-        print(f'animeElements: {animeElements}')
         for animeElement in animeElements:
             # Get the title
             query = animeElement.xpath(
