@@ -7,6 +7,7 @@ from discord.ext import commands
 from lxml import html
 
 from tomorinao.cogs import animecog
+from tomorinao.cogs.anime import _9anime
 
 
 class TestAnimeCog(asynctest.TestCase):
@@ -17,6 +18,7 @@ class TestAnimeCog(asynctest.TestCase):
 
         cls.bot = commands.Bot(command_prefix='!')
         cls.animeCog = animecog.AnimeCog(cls.bot)
+        cls.animeCog.anime = _9anime._9Anime()
         cls.bot.add_cog(cls.animeCog)
 
         with open('test/test_data/9anime_1.html') as file:

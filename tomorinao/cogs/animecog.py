@@ -3,7 +3,7 @@ import discord
 from discord.ext import tasks, commands
 
 from tomorinao.cache import Cache
-from tomorinao.cogs.anime._9anime import _9Anime
+from tomorinao.cogs.anime import _9anime, gogoanime
 
 
 class AnimeCog(commands.Cog):
@@ -14,7 +14,8 @@ class AnimeCog(commands.Cog):
         self.cachedAnimes = Cache()     # we can use this cache to check whether an anime was just released
 
         # Replace this with your own 'Anime API' if you want to use a different anime source
-        self.anime = _9Anime()
+        # self.anime = _9anime._9Anime()
+        self.anime = gogoanime.GoGoAnime()
 
     def fillCache(self):
         animes = self.anime.getRecentAnime()
