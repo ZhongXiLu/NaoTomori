@@ -6,6 +6,13 @@ And yes, Tomori Nao is my waifu.
 
 This is just a personal bot, meaning it only servers one user at a time, so feel free to use it for yourself.
 
+Currently it supports following sources:
+- Anime:
+    - [GoGoAnime](https://www4.gogoanime.io/) (default)
+    - [9anime](https://www1.9anime.nl/home) (does not work on [Heroku](https://www.heroku.com/))
+- Manga:
+    - [MangaRock](https://mangarock.com/)
+
 ## Setup
 
 Before running setting up, make sure you are using python3.7.

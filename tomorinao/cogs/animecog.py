@@ -44,7 +44,7 @@ class AnimeCog(commands.Cog):
         embed = discord.Embed(title=title, description=count, color=discord.Color.green())
         embed.add_field(name="Link", value=f"[{link}]({link})")
         embed.set_thumbnail(url=image)
-        await self.bot.get_cog('UserCog').channel.send(embed=embed)
+        await self.bot.get_cog('UserCog').channel.send(self.bot.get_cog('UserCog').discordUser.mention, embed=embed)
 
     async def checkNewAnime(self):
         animes = self.anime.getRecentAnime()

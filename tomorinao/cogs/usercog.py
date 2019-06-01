@@ -9,7 +9,8 @@ class UserCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.user = None
+        self.discordUser = None
+        self.malUser = None
         self.channel = None
         self.jikan = Jikan()
 
@@ -35,9 +36,10 @@ class UserCog(commands.Cog):
     @commands.command(brief='Set your MAL profile')
     async def setProfile(self, ctx, profile: str):
         try:
+            self.discordUser = ctx.author
             user = self._getMALProfile(profile)
             self._updateMALProfile(profile)
-            self.user = user
+            self.malUser = user
             self.channel = ctx.channel
             await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
@@ -46,12 +48,12 @@ class UserCog(commands.Cog):
 
     @commands.command(brief='Get a brief overview of your MAL profile')
     async def getProfile(self, ctx):
-        if self.user:
-            embed = discord.Embed(title=self.user['username'], color=discord.Color.green())
+        if self.malUser:
+            embed = discord.Embed(title=self.malUser['username'], color=discord.Color.green())
             embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').watching)))
             embed.add_field(name="Reading", value=str(len(self.bot.get_cog('MangaCog').reading)))
-            embed.add_field(name="Link", value=self.user['url'])
-            embed.set_thumbnail(url=self.user['image_url'])
+            embed.add_field(name="Link", value=self.malUser['url'])
+            embed.set_thumbnail(url=self.malUser['image_url'])
             await ctx.send(embed=embed)
         else:
             await ctx.send("Profile is not set, please use `!setProfile <USERNAME>` first.")
@@ -67,5 +69,5 @@ class UserCog(commands.Cog):
 
     @tasks.loop(minutes=30)
     async def updateMalProfileLoop(self):
-        if self.user:
-            await self._updateMALProfile(self.user['username'])
+        if self.malUser:
+            await self._updateMALProfile(self.malUser['username'])
