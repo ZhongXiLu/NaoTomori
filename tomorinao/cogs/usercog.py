@@ -13,7 +13,7 @@ class UserCog(commands.Cog):
         self.channel = None
         self.jikan = Jikan()
 
-    @commands.command()
+    @commands.command(brief='Ping the bot')
     async def ping(self, ctx):
         await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
 
@@ -30,7 +30,7 @@ class UserCog(commands.Cog):
             manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
             self.bot.get_cog('MangaCog').reading.append(manga)
 
-    @commands.command()
+    @commands.command(brief='Set your MAL profile', description='!setProfile <MAL_USERNAME>')
     async def setProfile(self, ctx, profile: str):
         try:
             user = self._getMALProfile(profile)
@@ -44,7 +44,7 @@ class UserCog(commands.Cog):
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
 
-    @commands.command()
+    @commands.command(brief='Get a brief overview of your MAL profile')
     async def getProfile(self, ctx):
         if self.user:
             embed = discord.Embed(title=self.user['username'], color=discord.Color.green())
@@ -56,7 +56,7 @@ class UserCog(commands.Cog):
         else:
             await ctx.send("Profile is not set, please use `!setProfile <USERNAME>` first.")
 
-    @commands.command()
+    @commands.command(brief='Set the bot channel (where it will ping you)', description='!setChannel <CHANNEL_NAME>')
     async def setChannel(self, ctx, channel: discord.TextChannel):
         self.channel = channel
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')

@@ -17,6 +17,17 @@ class AnimeCog(commands.Cog):
         # self.anime = _9anime._9Anime()
         self.anime = gogoanime.GoGoAnime()
 
+    @commands.command(brief='Set the anime source for retrieving new anime')
+    async def setAnimeSource(self, ctx, source: str):
+        if source.lower() == "gogoanime":
+            self.anime = gogoanime.GoGoAnime()
+        elif source.lower() == "9anime":
+            self.anime = _9anime._9Anime()
+        else:
+            await ctx.send('Unknown or unsupported anime source.')
+            return
+        await ctx.send(f'Successfully set the anime source to {source}.')
+
     def fillCache(self):
         animes = self.anime.getRecentAnime()
         animes.reverse()    # make sure the most recent ones are added last to the cache

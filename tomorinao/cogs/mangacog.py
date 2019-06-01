@@ -16,6 +16,15 @@ class MangaCog(commands.Cog):
         # Replace this with your own 'Manga API' if you want to use a different manga source
         self.manga = MangaRock()
 
+    @commands.command(brief='Set the manga source for retrieving new manga')
+    async def setMangaSource(self, ctx, source: str):
+        if source.lower() == "mangarock":
+            self.manga = MangaRock()
+        else:
+            await ctx.send('Unknown or unsupported manga source.')
+            return
+        await ctx.send(f'Successfully set the manga source to {source}.')
+
     def fillCache(self):
         mangas = self.manga.getRecentManga()
         mangas.reverse()    # make sure the most recent ones are added last to the cache
