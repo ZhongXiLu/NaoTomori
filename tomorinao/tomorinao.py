@@ -16,5 +16,5 @@ class TomoriNao(commands.Bot):
     async def on_ready(self):
         print(f"Logged in as {self.user.name}")
         await self.change_presence(activity=discord.Game(name="Running!"))
-        self.get_cog('AnimeCog').fillCache()
-        self.get_cog('MangaCog').fillCache()
+        self.get_cog('AnimeCog').start()
+        self.get_cog('MangaCog').start()

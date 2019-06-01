@@ -24,12 +24,3 @@ Run all unit tests:
 ```bash
 python -m unittest -v
 ```
-
-## Future work
-
-Currently, it uses [GoGoAnime](https://www4.gogoanime.io/) to check for updates and send links, but if you want, you can add/use your own api (you can look at `_GoGoAnime` for a reference):
-1. Write a class in the `tomorinao.cogs.anime` module
-2. Add a `getRecentAnime()` method to it
-3. Replace the `self.anime` attribute in the `AnimeCog` with your custom api
-
-Same applies to [MangaRock](https://mangarock.com/) as the manga source.

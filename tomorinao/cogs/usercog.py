@@ -13,6 +13,8 @@ class UserCog(commands.Cog):
         self.channel = None
         self.jikan = Jikan()
 
+        self.updateMalProfileLoop.start()
+
     @commands.command(brief='Ping the bot')
     async def ping(self, ctx):
         await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
@@ -30,15 +32,13 @@ class UserCog(commands.Cog):
             manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
             self.bot.get_cog('MangaCog').reading.append(manga)
 
-    @commands.command(brief='Set your MAL profile', description='!setProfile <MAL_USERNAME>')
+    @commands.command(brief='Set your MAL profile')
     async def setProfile(self, ctx, profile: str):
         try:
             user = self._getMALProfile(profile)
+            self._updateMALProfile(profile)
             self.user = user
             self.channel = ctx.channel
-            self.updateMalProfileLoop.start()
-            self.bot.get_cog('AnimeCog').checkNewAnimeLoop.start()
-            self.bot.get_cog('MangaCog').checkNewMangaLoop.start()
             await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
         except jikanpy.exceptions.APIException:
@@ -56,7 +56,7 @@ class UserCog(commands.Cog):
         else:
             await ctx.send("Profile is not set, please use `!setProfile <USERNAME>` first.")
 
-    @commands.command(brief='Set the bot channel (where it will ping you)', description='!setChannel <CHANNEL_NAME>')
+    @commands.command(brief='Set the bot channel (where it will ping you)')
     async def setChannel(self, ctx, channel: discord.TextChannel):
         self.channel = channel
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')
@@ -67,5 +67,5 @@ class UserCog(commands.Cog):
 
     @tasks.loop(minutes=30)
     async def updateMalProfileLoop(self):
-        if self.user is not None:
+        if self.user:
             await self._updateMALProfile(self.user['username'])
