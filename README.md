@@ -23,7 +23,7 @@ export DISCORD_CLIENT_TOKEN=<TOKEN>
 python main.py
 ```
 
-Alternatively, you can [Heroku](https://www.heroku.com/) to host the discord bot for free, there are already config files present, so the deployment should be easy.
+Alternatively, you can use [Heroku](https://www.heroku.com/) to host the discord bot for free, there are already config files present, so the deployment should be easy.
 
 ## Tests
 
