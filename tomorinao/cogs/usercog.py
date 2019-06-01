@@ -1,7 +1,7 @@
 
 import discord
 import jikanpy
-from discord.ext import commands
+from discord.ext import tasks, commands
 from jikanpy import Jikan
 
 
@@ -17,22 +17,26 @@ class UserCog(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
 
+    def _getMALProfile(self, username):
+        return self.jikan.user(username=username)
+
+    def _updateMALProfile(self, profile):
+        self.bot.get_cog('AnimeCog').watching.clear()
+        for anime in self.jikan.user(username=profile, request='animelist', argument='watching')['anime']:
+            anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
+            self.bot.get_cog('AnimeCog').watching.append(anime)
+        self.bot.get_cog('MangaCog').reading.clear()
+        for manga in self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']:
+            manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
+            self.bot.get_cog('MangaCog').reading.append(manga)
+
     @commands.command()
     async def setProfile(self, ctx, profile: str):
         try:
-            user = self.jikan.user(username=profile)
+            user = self._getMALProfile(profile)
             self.user = user
             self.channel = ctx.channel
-
-            animes = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
-            for anime in animes:
-                anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
-                self.bot.get_cog('AnimeCog').watching.append(anime)
-            mangas = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
-            for manga in mangas:
-                manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
-                self.bot.get_cog('MangaCog').reading.append(manga)
-
+            self.updateMalProfileLoop.start()
             self.bot.get_cog('AnimeCog').checkNewAnimeLoop.start()
             self.bot.get_cog('MangaCog').checkNewMangaLoop.start()
             await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
@@ -46,6 +50,7 @@ class UserCog(commands.Cog):
             embed = discord.Embed(title=self.user['username'], color=discord.Color.green())
             embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').watching)))
             embed.add_field(name="Reading", value=str(len(self.bot.get_cog('MangaCog').reading)))
+            embed.add_field(name="Link", value=self.user['url'])
             embed.set_thumbnail(url=self.user['image_url'])
             await ctx.send(embed=embed)
         else:
@@ -59,3 +64,8 @@ class UserCog(commands.Cog):
     @setChannel.error
     async def setChannelError(self, ctx, error):
         await ctx.send(error.args[0])
+
+    @tasks.loop(minutes=30)
+    async def updateMalProfileLoop(self):
+        if self.user is not None:
+            await self._updateMALProfile(self.user['username'])
