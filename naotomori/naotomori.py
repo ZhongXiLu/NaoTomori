@@ -2,10 +2,10 @@
 import discord
 from discord.ext import commands
 
-from tomorinao.cogs import usercog, animecog, mangacog
+from naotomori.cogs import usercog, animecog, mangacog
 
 
-class TomoriNao(commands.Bot):
+class NaoTomori(commands.Bot):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

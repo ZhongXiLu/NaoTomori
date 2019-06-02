@@ -2,8 +2,8 @@
 import discord
 from discord.ext import tasks, commands
 
-from tomorinao.cache import Cache
-from tomorinao.cogs.manga.mangarock import MangaRock
+from naotomori.cache import Cache
+from naotomori.cogs.manga.mangarock import MangaRock
 
 
 class MangaCog(commands.Cog):

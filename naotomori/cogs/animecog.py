@@ -2,8 +2,8 @@
 import discord
 from discord.ext import tasks, commands
 
-from tomorinao.cache import Cache
-from tomorinao.cogs.anime import _9anime, gogoanime
+from naotomori.cache import Cache
+from naotomori.cogs.anime import _9anime, gogoanime
 
 
 class AnimeCog(commands.Cog):

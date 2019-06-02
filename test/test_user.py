@@ -4,7 +4,7 @@ import jikanpy
 from unittest.mock import MagicMock
 from discord.ext import commands
 
-from tomorinao.cogs import usercog, animecog, mangacog
+from naotomori.cogs import usercog, animecog, mangacog
 
 
 class TestUserCog(unittest.TestCase):

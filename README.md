@@ -1,8 +1,7 @@
 
-## Tomori Nao
+## Nao Tomori
 
 Basic Discord bot that pings you when a new anime episode or manga chapter is released, based on your [MyAnimeList](https://myanimelist.net/) account. I couldn't find any bot that does this, so I wrote one my own.
-And yes, Tomori Nao is my waifu.
 
 This is just a personal bot, meaning it only servers one user at a time, so feel free to use it for yourself.
 

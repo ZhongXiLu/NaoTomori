@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 from discord.ext import commands
 from lxml import html
 
-from tomorinao.cogs import mangacog
+from naotomori.cogs import mangacog
 
 
 class TestMangaCog(asynctest.TestCase):

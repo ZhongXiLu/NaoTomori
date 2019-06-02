@@ -6,8 +6,8 @@ from unittest.mock import MagicMock
 from discord.ext import commands
 from lxml import html
 
-from tomorinao.cogs import animecog
-from tomorinao.cogs.anime import _9anime
+from naotomori.cogs import animecog
+from naotomori.cogs.anime import _9anime
 
 
 class TestAnimeCog(asynctest.TestCase):
