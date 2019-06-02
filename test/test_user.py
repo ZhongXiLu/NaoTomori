@@ -52,7 +52,7 @@ class TestUserCog(unittest.TestCase):
 
         self.userCog._updateMALProfile('DontKiIIMe')
 
-        self.assertEqual(self.bot.get_cog('AnimeCog').watching, [
+        self.assertEqual(self.bot.get_cog('AnimeCog').list, [
             {
                 'mal_id': 38524,
                 'title': 'Shingeki no Kyojin Season 3 Part 2',
@@ -60,7 +60,7 @@ class TestUserCog(unittest.TestCase):
                 'image_url': 'https://cdn.myanimelist.net/images/anime/1517/100633.jpg?s=a00404552ef172c5cec8d586ed537214',
             }
         ])
-        self.assertEqual(self.bot.get_cog('MangaCog').reading, [
+        self.assertEqual(self.bot.get_cog('MangaCog').list, [
             {
                 'mal_id': 103851,
                 'title': '5-toubun no Hanayome',

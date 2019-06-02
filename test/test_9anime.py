@@ -52,7 +52,7 @@ class Test9Anime(unittest.TestCase):
             animes = self._9anime._findAnimeElements(tree)
             self._9anime._findAnimeElements = MagicMock(return_value=animes)
 
-        recentAnime = self._9anime.getRecentAnime()
+        recentAnime = self._9anime.getRecent()
         self.assertEqual(len(recentAnime), 15)
         self.assertEqual([anime.title for anime in recentAnime], [
             'Carole & Tuesday',

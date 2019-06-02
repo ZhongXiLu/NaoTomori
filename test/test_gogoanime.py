@@ -44,7 +44,7 @@ class TestGoGoAnime(unittest.TestCase):
             animes = self.gogoanime._findAnimeElements(tree)
             self.gogoanime._findAnimeElements = MagicMock(return_value=animes)
 
-        recentAnime = self.gogoanime.getRecentAnime()
+        recentAnime = self.gogoanime.getRecent()
         self.assertEqual(len(recentAnime), 16)
         self.assertEqual([anime.title for anime in recentAnime[:10]], [
             'Detective Conan',

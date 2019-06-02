@@ -21,10 +21,10 @@ class TestMangaCog(asynctest.TestCase):
 
         with open('test/test_data/mangarock_1.html') as file:
             tree = html.fromstring(file.read())
-            cls.mangas1 = cls.mangaCog.manga._findMangaElements(tree)
+            cls.mangas1 = cls.mangaCog.source._findMangaElements(tree)
         with open('test/test_data/mangarock_2.html') as file:
             tree = html.fromstring(file.read())
-            cls.mangas2 = cls.mangaCog.manga._findMangaElements(tree)
+            cls.mangas2 = cls.mangaCog.source._findMangaElements(tree)
 
     def tearDown(self):
         self.mangaCog.cachedAnimes = []
@@ -32,10 +32,10 @@ class TestMangaCog(asynctest.TestCase):
     def test_cacheManga(self):
         """Test the initial caching"""
 
-        self.mangaCog.manga._findMangaElements = MagicMock(return_value=self.mangas1)
+        self.mangaCog.source._findMangaElements = MagicMock(return_value=self.mangas1)
         self.mangaCog.fillCache()
-        self.assertEqual(len(self.mangaCog.cachedMangas), 16)
-        self.assertEqual(self.mangaCog.cachedMangas, [
+        self.assertEqual(len(self.mangaCog.cache), 16)
+        self.assertEqual(self.mangaCog.cache, [
             'The Dark Seal',
             'Heart-Warming Meals with Mother Fenrir',
             'Utakata Dialogue',
@@ -57,10 +57,10 @@ class TestMangaCog(asynctest.TestCase):
     async def test_checkNewManga(self):
         """Test checking for new mangas and make sure 'pings' are sent out correctly"""
 
-        self.mangaCog.manga._findMangaElements = MagicMock(return_value=self.mangas1)
+        self.mangaCog.source._findMangaElements = MagicMock(return_value=self.mangas1)
         self.mangaCog.fillCache()
-        oldCache = copy.deepcopy(self.mangaCog.cachedMangas)
-        self.assertEqual(len(self.mangaCog.cachedMangas), 16)
+        oldCache = copy.deepcopy(self.mangaCog.cache)
+        self.assertEqual(len(self.mangaCog.cache), 16)
 
         # This allows mocking async methods, thanks to https://stackoverflow.com/a/46326234 :)
         f = Future()
@@ -68,21 +68,21 @@ class TestMangaCog(asynctest.TestCase):
 
         # User isn't watching anything => no pings are sent out
         self.mangaCog.sendPing = MagicMock(return_value=f)
-        await self.mangaCog.checkNewManga()
+        await self.mangaCog.checkNew()
         self.mangaCog.sendPing.assert_not_called()
-        self.assertEqual(self.mangaCog.cachedMangas, oldCache)
+        self.assertEqual(self.mangaCog.cache, oldCache)
 
         # User is reading '3-gatsu no Lion' => should receive one ping
-        self.mangaCog.reading.append({
+        self.mangaCog.list.append({
             'title': '3-gatsu no Lion',
             'title_english': 'March Comes in Like a Lion',
             'image_url': 'https://cdn.myanimelist.net/images/manga/1/52281.jpg'
         })
-        self.mangaCog.manga._findMangaElements = MagicMock(return_value=self.mangas2)    # has latest chapter of 3-gatsu no Lion
-        oldCache = copy.deepcopy(self.mangaCog.cachedMangas)
+        self.mangaCog.source._findMangaElements = MagicMock(return_value=self.mangas2)    # has latest chapter of 3-gatsu no Lion
+        oldCache = copy.deepcopy(self.mangaCog.cache)
 
         self.mangaCog.sendPing = MagicMock(return_value=f)
-        await self.mangaCog.checkNewManga()
+        await self.mangaCog.checkNew()
         self.assertEqual(self.mangaCog.sendPing.call_count, 1)
         self.mangaCog.sendPing.assert_called_once_with(
             '3-gatsu no Lion',
@@ -90,5 +90,5 @@ class TestMangaCog(asynctest.TestCase):
             'https://mangarock.com/manga/mrs-serie-2048/chapter/mrs-chapter-200052839',
             'https://cdn.myanimelist.net/images/manga/1/52281.jpg'
         )
-        self.assertNotEqual(self.mangaCog.cachedMangas, oldCache)
-        self.assertTrue('3-gatsu no Lion' in self.mangaCog.cachedMangas)
+        self.assertNotEqual(self.mangaCog.cache, oldCache)
+        self.assertTrue('3-gatsu no Lion' in self.mangaCog.cache)

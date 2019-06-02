@@ -43,7 +43,7 @@ class TestMangaRock(unittest.TestCase):
             mangas = self.mangarock._findMangaElements(tree)
             self.mangarock._findMangaElements = MagicMock(return_value=mangas)
 
-        recentManga = self.mangarock.getRecentManga()
+        recentManga = self.mangarock.getRecent()
         self.assertEqual(len(recentManga), 16)
         self.assertEqual([manga.title for manga in recentManga], [
             'Wasteful Days of High School Girl',

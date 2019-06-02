@@ -10,12 +10,15 @@ class _9Anime:
     def __init__(self):
         self.url = 'https://www1.9anime.nl/home'
 
+    def __str__(self):
+        return "9anime"
+
     def _findAnimeElements(self, tree):
         return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' content ')\
                                             and not(contains(concat(' ', @class, ' '), ' hidden '))]/*[1]/*[1]/*")
 
     # Return the most recent animes (should be less than 16) with the most recent at the front of the list
-    def getRecentAnime(self):
+    def getRecent(self):
         animes = []
 
         # Get all the anime html elements from the 9anime homepage

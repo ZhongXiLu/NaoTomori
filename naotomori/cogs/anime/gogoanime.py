@@ -10,11 +10,14 @@ class GoGoAnime:
     def __init__(self):
         self.url = 'https://www4.gogoanime.io/'
 
+    def __str__(self):
+        return "GoGoAnime"
+
     def _findAnimeElements(self, tree):
         return tree.xpath("//ul[contains(concat(' ', normalize-space(@class), ' '), ' items ')]/*")
 
     # Return the most recent animes (should be less than 16) with the most recent at the front of the list
-    def getRecentAnime(self):
+    def getRecent(self):
         animes = []
 
         # Get all the anime html elements from the 9anime homepage

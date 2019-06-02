@@ -24,14 +24,14 @@ class UserCog(commands.Cog):
         return self.jikan.user(username=username)
 
     def _updateMALProfile(self, profile):
-        self.bot.get_cog('AnimeCog').watching.clear()
+        self.bot.get_cog('AnimeCog').list.clear()
         for anime in self.jikan.user(username=profile, request='animelist', argument='watching')['anime']:
             anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
-            self.bot.get_cog('AnimeCog').watching.append(anime)
-        self.bot.get_cog('MangaCog').reading.clear()
+            self.bot.get_cog('AnimeCog').list.append(anime)
+        self.bot.get_cog('MangaCog').list.clear()
         for manga in self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']:
             manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
-            self.bot.get_cog('MangaCog').reading.append(manga)
+            self.bot.get_cog('MangaCog').list.append(manga)
 
     @commands.command(brief='Set your MAL profile')
     async def setProfile(self, ctx, profile: str):
@@ -50,8 +50,8 @@ class UserCog(commands.Cog):
     async def getProfile(self, ctx):
         if self.malUser:
             embed = discord.Embed(title=self.malUser['username'], color=discord.Color.green())
-            embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').watching)))
-            embed.add_field(name="Reading", value=str(len(self.bot.get_cog('MangaCog').reading)))
+            embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').list)))
+            embed.add_field(name="Reading", value=str(len(self.bot.get_cog('MangaCog').list)))
             embed.add_field(name="Link", value=self.malUser['url'])
             embed.set_thumbnail(url=self.malUser['image_url'])
             await ctx.send(embed=embed)

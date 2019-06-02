@@ -10,11 +10,14 @@ class MangaRock:
     def __init__(self):
         self.url = 'https://mangarock.com'
 
+    def __str__(self):
+        return "MangaRock"
+
     def _findMangaElements(self, tree):
         return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' _1cii_ ')]")
 
     # Return the most recent manga chapters (should be less than 16) with the most recent at the front of the list
-    def getRecentManga(self):
+    def getRecent(self):
         mangas = []
 
         # Get all the manga html elements from the MangaRock homepage

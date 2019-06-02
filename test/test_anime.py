@@ -18,26 +18,26 @@ class TestAnimeCog(asynctest.TestCase):
 
         cls.bot = commands.Bot(command_prefix='!')
         cls.animeCog = animecog.AnimeCog(cls.bot)
-        cls.animeCog.anime = _9anime._9Anime()
+        cls.animeCog.source = _9anime._9Anime()
         cls.bot.add_cog(cls.animeCog)
 
         with open('test/test_data/9anime_1.html') as file:
             tree = html.fromstring(file.read())
-            cls.animes1 = cls.animeCog.anime._findAnimeElements(tree)
+            cls.animes1 = cls.animeCog.source._findAnimeElements(tree)
         with open('test/test_data/9anime_2.html') as file:
             tree = html.fromstring(file.read())
-            cls.animes2 = cls.animeCog.anime._findAnimeElements(tree)
+            cls.animes2 = cls.animeCog.source._findAnimeElements(tree)
 
     def tearDown(self):
-        self.animeCog.cachedAnimes = []
+        self.animeCog.cache = []
 
     def test_cacheAnime(self):
         """Test the initial caching"""
 
-        self.animeCog.anime._findAnimeElements = MagicMock(return_value=self.animes1)
+        self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
-        self.assertEqual(len(self.animeCog.cachedAnimes), 15)
-        self.assertEqual(self.animeCog.cachedAnimes, [
+        self.assertEqual(len(self.animeCog.cache), 15)
+        self.assertEqual(self.animeCog.cache, [
             'Kono Yo no Hate de Koi wo Utau Shoujo YU-NO (Dub)',
             'Shinkansen Henkei Robo Shinkalion The Animation',
             'Mitsuboshi Colors (Dub)',
@@ -58,10 +58,10 @@ class TestAnimeCog(asynctest.TestCase):
     async def test_checkNewAnime(self):
         """Test checking for new animes and make sure 'pings' are sent out correctly"""
 
-        self.animeCog.anime._findAnimeElements = MagicMock(return_value=self.animes1)
+        self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
-        oldCache = copy.deepcopy(self.animeCog.cachedAnimes)
-        self.assertEqual(len(self.animeCog.cachedAnimes), 15)
+        oldCache = copy.deepcopy(self.animeCog.cache)
+        self.assertEqual(len(self.animeCog.cache), 15)
 
         # This allows mocking async methods, thanks to https://stackoverflow.com/a/46326234 :)
         f = Future()
@@ -69,21 +69,21 @@ class TestAnimeCog(asynctest.TestCase):
 
         # User isn't watching anything => no pings are sent out
         self.animeCog.sendPing = MagicMock(return_value=f)
-        await self.animeCog.checkNewAnime()
+        await self.animeCog.checkNew()
         self.animeCog.sendPing.assert_not_called()
-        self.assertEqual(self.animeCog.cachedAnimes, oldCache)
+        self.assertEqual(self.animeCog.cache, oldCache)
 
         # User is watching 'One Punch Man 2nd Season' => should receive one ping
-        self.animeCog.watching.append({
+        self.animeCog.list.append({
             'title': 'One Punch Man 2nd Season',
             'title_english': 'One Punch-Man 2',
             'image_url': 'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
         })
-        self.animeCog.anime._findAnimeElements = MagicMock(return_value=self.animes2)    # has latest ep of OPM S2
-        oldCache = copy.deepcopy(self.animeCog.cachedAnimes)
+        self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes2)    # has latest ep of OPM S2
+        oldCache = copy.deepcopy(self.animeCog.cache)
 
         self.animeCog.sendPing = MagicMock(return_value=f)
-        await self.animeCog.checkNewAnime()
+        await self.animeCog.checkNew()
         self.assertEqual(self.animeCog.sendPing.call_count, 1)
         self.animeCog.sendPing.assert_called_once_with(
             'One Punch Man 2nd Season',
@@ -91,6 +91,6 @@ class TestAnimeCog(asynctest.TestCase):
             'https://www1.9anime.nl/watch/one-punch-man-2nd-season.qqmj',
             'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
         )
-        self.assertNotEqual(self.animeCog.cachedAnimes, oldCache)
-        self.assertEqual(self.animeCog.cachedAnimes[-1], 'One Punch Man 2nd Season')
+        self.assertNotEqual(self.animeCog.cache, oldCache)
+        self.assertEqual(self.animeCog.cache[-1], 'One Punch Man 2nd Season')
 
