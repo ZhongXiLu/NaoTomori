@@ -20,7 +20,7 @@ class GoGoAnime:
     def getRecent(self):
         animes = []
 
-        # Get all the anime html elements from the 9anime homepage
+        # Get all the anime html elements from the GoGoAnime homepage
         animeElements = []
         with requests.Session() as session:
             session.headers = {'User-Agent': 'Mozilla/5.0'}
@@ -34,6 +34,9 @@ class GoGoAnime:
         for animeElement in animeElements:
             title = animeElement.xpath(".//p/a[@title]")[0].text_content()
             link = animeElement.xpath(".//p/a[@title]/@href")[0]
+            if link.startswith('/'):
+                # Relative path => prepend base url
+                link = self.url + link
             ep = animeElement.xpath(".//p[contains(concat(' ', normalize-space(@class), ' '), ' episode ')]")[0].text_content()
             animes.append(Anime(title=title, ep=ep, link=link))
 

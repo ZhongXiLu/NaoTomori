@@ -32,6 +32,7 @@ class SourceCog(commands.Cog):
 
     async def checkNew(self):
         items = self.source.getRecent()
+        items.reverse()
         if items:
             for item in items:
                 if item.title not in self.cache:

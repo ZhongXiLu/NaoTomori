@@ -11,7 +11,7 @@ class AnimeCog(SourceCog):
         super().__init__(bot)
 
         # Replace this with your own 'Anime API' if you want to use a different anime source
-        # self.anime = _9anime._9Anime()
+        # self.source = _9anime._9Anime()
         self.source = gogoanime.GoGoAnime()
 
     @commands.command(brief='Set the anime source for retrieving new anime')

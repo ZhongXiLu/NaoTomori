@@ -41,6 +41,9 @@ class _9Anime:
             ep = query[0].text_content() if len(query) > 0 else None
             if title:
                 link = animeElement.xpath("*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@href")[0]
+                if link.startswith('/'):
+                    # Relative path => prepend base url
+                    link = self.url + link
                 animes.append(Anime(title=title, ep=ep, link=link))
 
         return animes

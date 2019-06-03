@@ -27,7 +27,7 @@ class TestMangaCog(asynctest.TestCase):
             cls.mangas2 = cls.mangaCog.source._findMangaElements(tree)
 
     def tearDown(self):
-        self.mangaCog.cachedAnimes = []
+        self.mangaCog.cache = []
 
     def test_cacheManga(self):
         """Test the initial caching"""

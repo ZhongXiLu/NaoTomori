@@ -35,6 +35,9 @@ class MangaRock:
             title = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _3bzTG ')]")[0].text_content()
             ep = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]")[0].text_content()
             link = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]/@href")[0]
+            if link.startswith('/'):
+                # Relative path => prepend base url
+                link = self.url + link
             mangas.append(Manga(title=title, ep=ep, link=link))
 
         return mangas[:16]
