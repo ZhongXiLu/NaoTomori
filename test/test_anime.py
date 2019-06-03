@@ -37,7 +37,7 @@ class TestAnimeCog(asynctest.TestCase):
         self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
         self.assertEqual(len(self.animeCog.cache), 15)
-        self.assertEqual(self.animeCog.cache, [
+        self.assertEqual(list(self.animeCog.cache), [
             'Kono Yo no Hate de Koi wo Utau Shoujo YU-NO (Dub)',
             'Shinkansen Henkei Robo Shinkalion The Animation',
             'Mitsuboshi Colors (Dub)',

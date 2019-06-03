@@ -35,7 +35,7 @@ class TestMangaCog(asynctest.TestCase):
         self.mangaCog.source._findMangaElements = MagicMock(return_value=self.mangas1)
         self.mangaCog.fillCache()
         self.assertEqual(len(self.mangaCog.cache), 16)
-        self.assertEqual(self.mangaCog.cache, [
+        self.assertEqual(list(self.mangaCog.cache), [
             'The Dark Seal',
             'Heart-Warming Meals with Mother Fenrir',
             'Utakata Dialogue',

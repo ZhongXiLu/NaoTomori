@@ -1,8 +1,7 @@
 
 import discord
 from discord.ext import tasks, commands
-
-from naotomori.cache import Cache
+from collections import deque
 
 
 class SourceCog(commands.Cog):
@@ -11,7 +10,7 @@ class SourceCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.list = []  # currently watching/reading list
-        self.cache = Cache(32)
+        self.cache = deque(maxlen=32)
         self.source = None
 
     def start(self):
