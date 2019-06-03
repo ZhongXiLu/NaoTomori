@@ -11,7 +11,7 @@ class SourceCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.list = []  # currently watching/reading list
-        self.cache = Cache()
+        self.cache = Cache(32)
         self.source = None
 
     def start(self):
