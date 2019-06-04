@@ -40,11 +40,17 @@ class TestUserCog(unittest.TestCase):
                 }]
             },
             {
+                'anime': []
+            },
+            {
                 'manga': [{
                     'mal_id': 103851,
                     'title': '5-toubun no Hanayome',
                     'image_url': 'https://cdn.myanimelist.net/images/manga/2/201572.jpg?s=c279b0d8a685d1c727b81ad88bac587f'
                 }]
+            },
+            {
+                'manga': []
             }
         ])
         self.userCog.jikan.anime = MagicMock(side_effect=[{'title_english': 'Attack on Titan Season 3 Part 2'}])

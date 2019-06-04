@@ -41,11 +41,15 @@ class UserCog(commands.Cog):
 
     def _updateMALProfile(self, profile):
         self.bot.get_cog('AnimeCog').list.clear()
-        for anime in self.jikan.user(username=profile, request='animelist', argument='watching')['anime']:
+        watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
+        ptw = self.jikan.user(username=profile, request='animelist', argument='ptw')['anime']
+        for anime in watching + ptw:
             anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
             self.bot.get_cog('AnimeCog').list.append(anime)
         self.bot.get_cog('MangaCog').list.clear()
-        for manga in self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']:
+        reading = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
+        ptr = self.jikan.user(username=profile, request='mangalist', argument='ptr')['manga']
+        for manga in reading + ptr:
             manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
             self.bot.get_cog('MangaCog').list.append(manga)
 
