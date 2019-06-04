@@ -3,6 +3,7 @@ import discord
 import jikanpy
 from discord.ext import tasks, commands
 from jikanpy import Jikan
+from tinydb import TinyDB, Query
 
 
 class UserCog(commands.Cog):
@@ -13,12 +14,27 @@ class UserCog(commands.Cog):
         self.malUser = None
         self.channel = None
         self.jikan = Jikan()
-
-        self.updateMalProfileLoop.start()
+        self.db = TinyDB('db.json')
 
     @commands.command(brief='Ping the bot')
     async def ping(self, ctx):
         await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
+
+    def start(self):
+        query = Query()
+        if self.db.search(query.discordUser.exists()):
+            malUser = self.db.search(query.malUser.exists())[0]['malUser']
+            discordUser = self.db.search(query.discordUser.exists())[0]['discordUser']
+            channel = self.db.search(query.channel.exists())[0]['channel']
+
+            try:
+                self.malUser = self._getMALProfile(malUser)
+            except jikanpy.exceptions.APIException:
+                pass
+            self.discordUser = self._getMember(discordUser)
+            self.channel = self._getChannel(channel)
+
+        self.updateMalProfileLoop.start()
 
     def _getMALProfile(self, username):
         return self.jikan.user(username=username)
@@ -33,18 +49,43 @@ class UserCog(commands.Cog):
             manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
             self.bot.get_cog('MangaCog').list.append(manga)
 
+    def _getMember(self, user):
+        for member in self.bot.get_all_members():
+            if str(member) == user:
+                return member
+        return None
+
+    def _getChannel(self, channelName):
+        for channel in self.bot.get_all_channels():
+            if str(channel) == channelName:
+                return channel
+        return None
+
     @commands.command(brief='Set your MAL profile')
     async def setProfile(self, ctx, profile: str):
         try:
-            self.discordUser = ctx.author
-            user = self._getMALProfile(profile)
-            self._updateMALProfile(profile)
-            self.malUser = user
-            self.channel = ctx.channel
-            await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
-
+            self.malUser = self._getMALProfile(profile)
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
+        await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
+
+        self.discordUser = ctx.author
+        self.channel = ctx.channel
+
+        # Store data in database
+        query = Query()
+        if not self.db.search(query.discordUser.exists()):
+            # Data not in db yet
+            self.db.insert({'malUser': profile})
+            self.db.insert({'discordUser': str(self.discordUser)})
+            self.db.insert({'channel': str(ctx.channel)})
+        else:
+            # Data already in db => update it
+            self.db.update({'malUser': profile}, query.malUser.exists())
+            self.db.update({'discordUser': str(self.discordUser)}, query.discordUser.exists())
+            self.db.update({'channel': str(ctx.channel)}, query.channel.exists())
+
+        self._updateMALProfile(profile)
 
     @commands.command(brief='Get a brief overview of your MAL profile')
     async def getProfile(self, ctx):

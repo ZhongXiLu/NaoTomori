@@ -18,3 +18,4 @@ class NaoTomori(commands.Bot):
         await self.change_presence(activity=discord.Game(name="Running!"))
         self.get_cog('AnimeCog').start()
         self.get_cog('MangaCog').start()
+        self.get_cog('UserCog').start()
