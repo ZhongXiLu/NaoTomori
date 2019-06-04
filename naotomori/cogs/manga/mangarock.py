@@ -2,7 +2,7 @@
 import requests
 from lxml import html
 
-from source import Source
+from naotomori.cogs.source import Source
 
 
 class MangaRock:
