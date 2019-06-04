@@ -2,7 +2,7 @@
 from discord.ext import tasks, commands
 
 from naotomori.cogs.manga.mangarock import MangaRock
-from naotomori.cogs.source import SourceCog
+from naotomori.cogs.sourcecog import SourceCog
 
 
 class MangaCog(SourceCog):

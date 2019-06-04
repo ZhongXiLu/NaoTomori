@@ -58,7 +58,7 @@ class TestGoGoAnime(unittest.TestCase):
             'Midara na Ao-chan wa Benkyou ga Dekinai',
             'Senryuu Shoujo'
         ])
-        self.assertEqual([anime.ep for anime in recentAnime[:10]], [
+        self.assertEqual([anime.progress for anime in recentAnime[:10]], [
             'Episode 941',
             'Episode 9',
             'Episode 34',

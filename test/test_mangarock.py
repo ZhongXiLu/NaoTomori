@@ -63,7 +63,7 @@ class TestMangaRock(unittest.TestCase):
             'Heart-Warming Meals with Mother Fenrir',
             'The Dark Seal'
         ])
-        self.assertEqual([manga.ep for manga in recentManga], [
+        self.assertEqual([manga.progress for manga in recentManga], [
             'Vol.4 Chapter 56: Cavity',
             'Chapter 30',
             'Chapter 130: His Lead-Colored Prosthetic Leg is Sometimes Rainbow-Colored '

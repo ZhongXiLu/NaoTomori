@@ -71,7 +71,7 @@ class Test9Anime(unittest.TestCase):
             'Shinkansen Henkei Robo Shinkalion The Animation',
             'Kono Yo no Hate de Koi wo Utau Shoujo YU-NO (Dub)'
         ])
-        self.assertEqual([anime.ep for anime in recentAnime], [
+        self.assertEqual([anime.progress for anime in recentAnime], [
             ' Ep 8/24 ',
             ' Ep 9/11 ',
             ' Ep 32/36 ',

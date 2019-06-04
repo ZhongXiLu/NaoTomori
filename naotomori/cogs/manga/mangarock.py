@@ -2,7 +2,7 @@
 import requests
 from lxml import html
 
-from .manga import Manga
+from source import Source
 
 
 class MangaRock:
@@ -38,6 +38,6 @@ class MangaRock:
             if link.startswith('/'):
                 # Relative path => prepend base url
                 link = self.url + link
-            mangas.append(Manga(title=title, ep=ep, link=link))
+            mangas.append(Source(title=title, progress=ep, link=link))
 
         return mangas[:16]

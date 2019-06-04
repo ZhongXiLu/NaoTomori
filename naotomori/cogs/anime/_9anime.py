@@ -2,7 +2,7 @@
 import requests
 from lxml import html
 
-from .anime import Anime
+from source import Source
 
 
 class _9Anime:
@@ -44,6 +44,6 @@ class _9Anime:
                 if link.startswith('/'):
                     # Relative path => prepend base url
                     link = self.url + link
-                animes.append(Anime(title=title, ep=ep, link=link))
+                animes.append(Source(title=title, progress=ep, link=link))
 
         return animes

@@ -2,7 +2,7 @@
 import requests
 from lxml import html
 
-from .anime import Anime
+from source import Source
 
 
 class GoGoAnime:
@@ -38,6 +38,6 @@ class GoGoAnime:
                 # Relative path => prepend base url
                 link = self.url + link
             ep = animeElement.xpath(".//p[contains(concat(' ', normalize-space(@class), ' '), ' episode ')]")[0].text_content()
-            animes.append(Anime(title=title, ep=ep, link=link))
+            animes.append(Source(title=title, progress=ep, link=link))
 
         return animes[:16]
