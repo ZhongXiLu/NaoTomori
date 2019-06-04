@@ -1,5 +1,5 @@
 
-## Nao Tomori
+# Nao Tomori
 
 [![Build Status](https://travis-ci.org/ZhongXiLu/NaoTomori.svg?branch=master)](https://travis-ci.org/ZhongXiLu/NaoTomori)
 
@@ -14,7 +14,14 @@ Currently it supports following sources:
 - Manga:
     - [MangaRock](https://mangarock.com/)
 
+## Example Usage
+
+![](imgs/example.png)
+
+
 ## Setup
+
+#### Local Setup
 
 Before setting up, make sure you are using python3.7.
 
@@ -23,6 +30,8 @@ pip install -r requirements.txt
 export DISCORD_CLIENT_TOKEN=<TOKEN>
 python main.py
 ```
+
+#### Heroku Setup
 
 Alternatively, you can use [Heroku](https://www.heroku.com/) to host the discord bot for free, there are already config files present, so the deployment should be easy.
 
