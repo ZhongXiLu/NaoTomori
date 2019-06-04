@@ -95,8 +95,8 @@ class UserCog(commands.Cog):
     async def getProfile(self, ctx):
         if self.malUser:
             embed = discord.Embed(title=self.malUser['username'], color=discord.Color.green())
-            embed.add_field(name="Watching", value=str(len(self.bot.get_cog('AnimeCog').list)))
-            embed.add_field(name="Reading", value=str(len(self.bot.get_cog('MangaCog').list)))
+            embed.add_field(name="Watching/Plan-to-Watch", value=str(len(self.bot.get_cog('AnimeCog').list)))
+            embed.add_field(name="Reading/Plan-to-Read", value=str(len(self.bot.get_cog('MangaCog').list)))
             embed.add_field(name="Link", value=self.malUser['url'])
             embed.set_thumbnail(url=self.malUser['image_url'])
             await ctx.send(embed=embed)
