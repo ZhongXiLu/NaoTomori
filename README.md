@@ -1,6 +1,8 @@
 
 ## Nao Tomori
 
+[![Build Status](https://travis-ci.org/ZhongXiLu/NaoTomori.svg?branch=master)](https://travis-ci.org/ZhongXiLu/NaoTomori)
+
 Basic Discord bot that pings you when a new anime episode or manga chapter is released, based on your [MyAnimeList](https://myanimelist.net/) account. I couldn't find any bot that does this, so I wrote one my own.
 
 This is just a personal bot, meaning it only servers one user at a time, so feel free to use it for yourself.
@@ -14,7 +16,7 @@ Currently it supports following sources:
 
 ## Setup
 
-Before running setting up, make sure you are using python3.7.
+Before setting up, make sure you are using python3.7.
 
 ```bash
 pip install -r requirements.txt
