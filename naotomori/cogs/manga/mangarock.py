@@ -33,7 +33,14 @@ class MangaRock:
         for mangaElements in mangaElements:
             # Get the title
             title = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _3bzTG ')]")[0].text_content()
-            ep = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]")[0].text_content()
+
+            eps = []
+            epElements = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]")
+            del epElements[1::2]   # remove duplicates
+            for epElement in epElements:
+                eps.append(epElement.text_content() + '\n')
+            ep = "".join(eps).rstrip()
+
             link = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]/@href")[0]
             if link.startswith('/'):
                 # Relative path => prepend base url

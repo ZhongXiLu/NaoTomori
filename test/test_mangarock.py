@@ -68,16 +68,20 @@ class TestMangaRock(unittest.TestCase):
             'Chapter 30',
             'Chapter 130: His Lead-Colored Prosthetic Leg is Sometimes Rainbow-Colored '
             'Under the Sun',
-            'Vol.14 Chapter 126: Off Guard!!',
-            'Chapter 135',
+            'Vol.14 Chapter 126: Off Guard!!\n'
+            'Vol.14 Chapter 124: The Eternal Battle!!\n'
+            'Vol.14 Chapter 125: The Time of Awakening!!',
+            'Chapter 135\nChapter 133\nChapter 134',
             'Vol.28 Chapter 247: Graduation Ceremony of Unrequited Love',
             'Vol.4 Chapter 27',
-            'Vol.3 Chapter 40: A Slightly Upset Anjou-san',
-            'Vol.1 Chapter 15: Amazing sea demon!',
+            'Vol.3 Chapter 40: A Slightly Upset Anjou-san\n'
+            'Vol.3 Chapter 38: Anjou-San and The Cultural Festival\n'
+            'Vol.3 Chapter 39: Anjou-san and the Best Couple Contest',
+            'Vol.1 Chapter 15: Amazing sea demon!\nVol.1 Chapter 15: Amazing sea demon!',
             'Vol.20 Chapter 207: The Ultimate Magic',
             'Vol.1 Chapter 25',
             'Vol.TBD Chapter 136: Maze',
-            'Chapter 52',
+            'Chapter 52\nChapter 50\nChapter 51',
             'Vol.2 Chapter 10',
             'Chapter 2',
             'Chapter 5'
