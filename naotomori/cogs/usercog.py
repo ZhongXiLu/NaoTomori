@@ -148,7 +148,7 @@ class UserCog(commands.Cog):
         :param channel: Name of the bot channel.
         """
         self.channel = channel
-        self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(ctx.channel))
+        self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(channel))
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')
 
     @setChannel.error
