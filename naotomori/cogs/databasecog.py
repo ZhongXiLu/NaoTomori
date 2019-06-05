@@ -38,6 +38,10 @@ class DatabaseCog(commands.Cog):
         await ctx.send('Successfully recreated database.')
         self.start()
 
+    @commands.command(brief='Get the database (the current user)')
+    async def getDB(self, ctx):
+        await ctx.send(f'`{self.getUser()}`')
+
     def addUser(self, mal, discord, channel):
 
         # We're only storing one user, so truncate table to be sure that we only have on row in the table
