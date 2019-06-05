@@ -6,8 +6,16 @@ from discord.ext import commands
 
 
 class DatabaseCog(commands.Cog):
+    """
+    DatabaseCog: handles all the database requests.
+    """
 
     def __init__(self, bot):
+        """
+        Constructor: initialize the cog.
+
+        :param bot: The Discord bot.
+        """
         self.bot = bot
         try:
             self.conn = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
@@ -16,10 +24,16 @@ class DatabaseCog(commands.Cog):
             raise RuntimeError("Failed connecting to Postgresql")
 
     def __del__(self):
+        """
+        Destructor: close the database connections.
+        """
         self.cursor.close()
         self.conn.close()
 
     def start(self):
+        """
+        Start the DatabaseCog: creates the table if it didn't exist already.
+        """
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS USERS (
                 mal VARCHAR(32),
@@ -31,6 +45,10 @@ class DatabaseCog(commands.Cog):
 
     @commands.command(brief='Recreate the database (tables)')
     async def recreateDB(self, ctx):
+        """
+        Recreate the database, i.e. the 'USERS' table.
+        :param ctx: The context.
+        """
         self.cursor.execute("""
             DROP TABLE USERS;
         """)
@@ -40,9 +58,20 @@ class DatabaseCog(commands.Cog):
 
     @commands.command(brief='Get the database (the current user)')
     async def getDB(self, ctx):
+        """
+        Get the row of the 'USERS' table (should only be one atm), i.e. the current user.
+        :param ctx: The context.
+        """
         await ctx.send(f'`{self.getUser()}`')
 
     def addUser(self, mal, discord, channel):
+        """
+        Add a new user to the database, it either updates the existing one or it will create a new entry.
+
+        :param mal: The MAL username.
+        :param discord: The Discord username (name + tag).
+        :param channel: The bot channel name.
+        """
 
         # We're only storing one user, so truncate table to be sure that we only have on row in the table
         self.cursor.execute("""
@@ -56,6 +85,11 @@ class DatabaseCog(commands.Cog):
         self.conn.commit()
 
     def getUser(self):
+        """
+        Get the current user stored in the database.
+
+        :return: Dictionary of the current user, if none exists, return None.
+        """
         self.cursor.execute("""
             SELECT * FROM USERS LIMIT 1;
         """)

@@ -21,9 +21,9 @@ Currently it supports following sources:
 
 ## Setup
 
-#### Local Setup
+### Local Setup
 
-1. Set up Discord:
+1. Set up Discord application:
     - Go to https://discordapp.com/developers/applications/me
     - Create a new application
     - Make sure you save the bot token for in step 3
@@ -46,9 +46,17 @@ Currently it supports following sources:
     python main.py
     ```
 
-#### Heroku Setup
+### Heroku Setup
 
-Alternatively, you can use [Heroku](https://www.heroku.com/) to host the discord bot for free, there are already config files present, so the deployment should be easy.
+Alternatively, you can use [Heroku](https://www.heroku.com/) to host the discord bot for free, there are already config files present, so the deployment should be easy:
+
+1. Sign up for a [Heroku](https://signup.heroku.com/) account if you haven't already
+2. Create a new app
+3. Set the `DISCORD_CLIENT_TOKEN` in the config vars in your settings
+4. Add the [Heroku Postgres ](https://elements.heroku.com/addons/heroku-postgresql) plugin
+5. Choose a deployment method (I connected directly to this GitHub repository) and **deploy**
+6. Start your worker in the 'Resources' tab
+7. That's it! Your discord bot should be running 24/7 (it actually only runs 550 hours a month if you have the 'free' version, but you can increase this to 1000 hours if you link your credit card, making it run the entire month)
 
 ## Tests
 

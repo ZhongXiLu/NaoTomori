@@ -6,18 +6,39 @@ from naotomori.cogs.source import Source
 
 
 class GoGoAnime:
+    """
+    GoGoAnime: provides a minimal GoGoAnime api.
+    """
 
     def __init__(self):
+        """
+        Constructor.
+        """
         self.url = 'https://www4.gogoanime.io/'
 
     def __str__(self):
+        """
+        String representation.
+
+        :return: Name of source/api.
+        """
         return "GoGoAnime"
 
     def _findAnimeElements(self, tree):
+        """
+        Find all the anime elements in a html string.
+
+        :param tree: The html string in form of a tree.
+        :return: All the anime elements.
+        """
         return tree.xpath("//ul[contains(concat(' ', normalize-space(@class), ' '), ' items ')]/*")
 
-    # Return the most recent animes (should be less than 16) with the most recent at the front of the list
     def getRecent(self):
+        """
+        Get all the most recent anime chapters.
+
+        :return: List of all the recent anime (Source objects) with the most recent ones at the front of the list.
+        """
         animes = []
 
         # Get all the anime html elements from the GoGoAnime homepage
@@ -40,4 +61,4 @@ class GoGoAnime:
             ep = animeElement.xpath(".//p[contains(concat(' ', normalize-space(@class), ' '), ' episode ')]")[0].text_content()
             animes.append(Source(title=title, progress=ep, link=link))
 
-        return animes[:16]
+        return animes[:16]  # should be <= 16

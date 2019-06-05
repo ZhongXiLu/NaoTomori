@@ -10,6 +10,7 @@ from naotomori.cogs import mangacog
 
 
 class TestMangaCog(asynctest.TestCase):
+    """Tests for the MangaCog"""
 
     @classmethod
     def setUpClass(cls):

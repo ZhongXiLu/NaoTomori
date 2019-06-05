@@ -11,6 +11,7 @@ from naotomori.cogs.anime import _9anime
 
 
 class TestAnimeCog(asynctest.TestCase):
+    """Tests for the AnimeCog"""
 
     @classmethod
     def setUpClass(cls):

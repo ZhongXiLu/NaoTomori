@@ -7,6 +7,7 @@ from naotomori.cogs.anime.gogoanime import GoGoAnime
 
 
 class TestGoGoAnime(unittest.TestCase):
+    """Tests for GoGoAnime"""
 
     def setUp(self):
         self.gogoanime = GoGoAnime()

@@ -6,18 +6,39 @@ from naotomori.cogs.source import Source
 
 
 class MangaRock:
+    """
+    MangaRock: provides a minimal MangaRock api.
+    """
 
     def __init__(self):
+        """
+        Constructor.
+        """
         self.url = 'https://mangarock.com'
 
     def __str__(self):
+        """
+        String representation.
+
+        :return: Name of source/api.
+        """
         return "MangaRock"
 
     def _findMangaElements(self, tree):
+        """
+        Find all the manga elements in a html string.
+
+        :param tree: The html string in form of a tree.
+        :return: All the manga elements.
+        """
         return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' _1cii_ ')]")
 
-    # Return the most recent manga chapters (should be less than 16) with the most recent at the front of the list
     def getRecent(self):
+        """
+        Get all the most recent manga chapters.
+
+        :return: List of all the recent manga (Source objects) with the most recent ones at the front of the list.
+        """
         mangas = []
 
         # Get all the manga html elements from the MangaRock homepage
@@ -47,4 +68,4 @@ class MangaRock:
                 link = self.url + link
             mangas.append(Source(title=title, progress=ep, link=link))
 
-        return mangas[:16]
+        return mangas[:16]  # should be <= 16

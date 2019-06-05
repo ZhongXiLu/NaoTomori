@@ -7,6 +7,7 @@ from naotomori.cogs.anime._9anime import _9Anime
 
 
 class Test9Anime(unittest.TestCase):
+    """Tests for _9Anime"""
 
     def setUp(self):
         self._9anime = _9Anime()

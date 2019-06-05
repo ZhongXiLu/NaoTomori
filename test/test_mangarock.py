@@ -7,6 +7,7 @@ from naotomori.cogs.manga.mangarock import MangaRock
 
 
 class TestMangaRock(unittest.TestCase):
+    """Tests for the MangaRock"""
 
     def setUp(self):
         self.mangarock = MangaRock()

@@ -8,6 +8,7 @@ from naotomori.cogs import usercog, animecog, mangacog
 
 
 class TestUserCog(unittest.TestCase):
+    """Tests for the UserCog"""
 
     @classmethod
     def setUpClass(cls):

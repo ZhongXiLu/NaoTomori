@@ -6,19 +6,40 @@ from naotomori.cogs.source import Source
 
 
 class _9Anime:
+    """
+    _9Anime: provides a minimal 9anime api.
+    """
 
     def __init__(self):
+        """
+        Constructor.
+        """
         self.url = 'https://www1.9anime.nl/home'
 
     def __str__(self):
+        """
+        String representation.
+
+        :return: Name of source/api.
+        """
         return "9anime"
 
     def _findAnimeElements(self, tree):
+        """
+        Find all the anime elements in a html string.
+
+        :param tree: The html string in form of a tree.
+        :return: All the anime elements.
+        """
         return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' content ')\
                                             and not(contains(concat(' ', @class, ' '), ' hidden '))]/*[1]/*[1]/*")
 
-    # Return the most recent animes (should be less than 16) with the most recent at the front of the list
     def getRecent(self):
+        """
+        Get all the most recent anime chapters.
+
+        :return: List of all the recent anime (Source objects) with the most recent ones at the front of the list.
+        """
         animes = []
 
         # Get all the anime html elements from the 9anime homepage
@@ -46,4 +67,4 @@ class _9Anime:
                     link = self.url + link
                 animes.append(Source(title=title, progress=ep, link=link))
 
-        return animes
+        return animes   # should be <= 16

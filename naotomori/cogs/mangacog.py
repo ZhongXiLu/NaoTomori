@@ -6,8 +6,16 @@ from naotomori.cogs.sourcecog import SourceCog
 
 
 class MangaCog(SourceCog):
+    """
+    MangaCog: extends the SourceCog.
+    """
 
     def __init__(self, bot):
+        """
+        Constructor: initialize the cog.
+
+        :param bot: The Discord bot.
+        """
         super().__init__(bot)
 
         # Replace this with your own 'Manga API' if you want to use a different manga source
@@ -15,6 +23,12 @@ class MangaCog(SourceCog):
 
     @commands.command(brief='Set the manga source for retrieving new manga')
     async def setMangaSource(self, ctx, source: str):
+        """
+        Set the manga source, i.e. where it will retrieve the manga from.
+
+        :param ctx: The context.
+        :param source: Name of the manga source.
+        """
         if source.lower() == "mangarock":
             self.source = MangaRock()
         else:
@@ -26,4 +40,7 @@ class MangaCog(SourceCog):
 
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):
+        """
+        Loop that periodically calls checkNew to check for new manga.
+        """
         await self.checkNew()

@@ -6,8 +6,16 @@ from naotomori.cogs.sourcecog import SourceCog
 
 
 class AnimeCog(SourceCog):
+    """
+    AnimeCog: extends the SourceCog.
+    """
 
     def __init__(self, bot):
+        """
+        Constructor: initialize the cog.
+
+        :param bot: The Discord bot.
+        """
         super().__init__(bot)
 
         # Replace this with your own 'Anime API' if you want to use a different anime source
@@ -16,6 +24,12 @@ class AnimeCog(SourceCog):
 
     @commands.command(brief='Set the anime source for retrieving new anime')
     async def setAnimeSource(self, ctx, source: str):
+        """
+        Set the anime source, i.e. where it will retrieve the anime from.
+
+        :param ctx: The context.
+        :param source: Name of the anime source.
+        """
         if source.lower() == "gogoanime":
             self.source = gogoanime.GoGoAnime()
         elif source.lower() == "9anime":
@@ -29,4 +43,7 @@ class AnimeCog(SourceCog):
 
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):
+        """
+        Loop that periodically calls checkNew to check for new anime.
+        """
         await self.checkNew()
