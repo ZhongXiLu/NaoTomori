@@ -30,18 +30,18 @@ class MangaRock:
                 mangaElements = self._findMangaElements(tree)
 
         # Construct the Anime objects
-        for mangaElements in mangaElements:
+        for mangaElement in mangaElements:
             # Get the title
-            title = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _3bzTG ')]")[0].text_content()
+            title = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _3bzTG ')]")[0].text_content()
 
             eps = []
-            epElements = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]")
+            epElements = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]")
             del epElements[1::2]   # remove duplicates
             for epElement in epElements:
-                eps.append(epElement.text_content() + '\n')
-            ep = "".join(eps).rstrip()
+                eps.append(epElement.text_content())
+            ep = "\n".join(eps)
 
-            link = mangaElements.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]/@href")[0]
+            link = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]/@href")[0]
             if link.startswith('/'):
                 # Relative path => prepend base url
                 link = self.url + link

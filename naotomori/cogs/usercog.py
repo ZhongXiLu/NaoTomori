@@ -3,7 +3,6 @@ import discord
 import jikanpy
 from discord.ext import tasks, commands
 from jikanpy import Jikan
-from tinydb import TinyDB, Query
 
 
 class UserCog(commands.Cog):
@@ -14,25 +13,20 @@ class UserCog(commands.Cog):
         self.malUser = None
         self.channel = None
         self.jikan = Jikan()
-        self.db = TinyDB('db.json')
 
     @commands.command(brief='Ping the bot')
     async def ping(self, ctx):
         await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
 
     def start(self):
-        query = Query()
-        if self.db.search(query.discordUser.exists()):
-            malUser = self.db.search(query.malUser.exists())[0]['malUser']
-            discordUser = self.db.search(query.discordUser.exists())[0]['discordUser']
-            channel = self.db.search(query.channel.exists())[0]['channel']
-
+        user = self.bot.get_cog('DatabaseCog').getUser()
+        if user:
             try:
-                self.malUser = self._getMALProfile(malUser)
+                self.malUser = self._getMALProfile(user['mal'])
             except jikanpy.exceptions.APIException:
                 pass
-            self.discordUser = self._getMember(discordUser)
-            self.channel = self._getChannel(channel)
+            self.discordUser = self._getMember(user['discord'])
+            self.channel = self._getChannel(user['channel'])
 
         self.updateMalProfileLoop.start()
 
@@ -77,17 +71,7 @@ class UserCog(commands.Cog):
         self.channel = ctx.channel
 
         # Store data in database
-        query = Query()
-        if not self.db.search(query.discordUser.exists()):
-            # Data not in db yet
-            self.db.insert({'malUser': profile})
-            self.db.insert({'discordUser': str(self.discordUser)})
-            self.db.insert({'channel': str(ctx.channel)})
-        else:
-            # Data already in db => update it
-            self.db.update({'malUser': profile}, query.malUser.exists())
-            self.db.update({'discordUser': str(self.discordUser)}, query.discordUser.exists())
-            self.db.update({'channel': str(ctx.channel)}, query.channel.exists())
+        self.bot.get_cog('DatabaseCog').addUser(profile, str(self.discordUser), str(ctx.channel))
 
         self._updateMALProfile(profile)
 
@@ -106,6 +90,7 @@ class UserCog(commands.Cog):
     @commands.command(brief='Set the bot channel (where it will ping you)')
     async def setChannel(self, ctx, channel: discord.TextChannel):
         self.channel = channel
+        self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(ctx.channel))
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')
 
     @setChannel.error

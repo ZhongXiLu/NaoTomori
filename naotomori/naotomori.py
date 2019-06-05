@@ -2,7 +2,7 @@
 import discord
 from discord.ext import commands
 
-from naotomori.cogs import usercog, animecog, mangacog
+from naotomori.cogs import usercog, animecog, mangacog, databasecog
 
 
 class NaoTomori(commands.Bot):
@@ -12,6 +12,7 @@ class NaoTomori(commands.Bot):
         self.add_cog(usercog.UserCog(self))
         self.add_cog(animecog.AnimeCog(self))
         self.add_cog(mangacog.MangaCog(self))
+        self.add_cog(databasecog.DatabaseCog(self))
 
     async def on_ready(self):
         print(f"Logged in as {self.user.name}")
@@ -19,3 +20,4 @@ class NaoTomori(commands.Bot):
         self.get_cog('AnimeCog').start()
         self.get_cog('MangaCog').start()
         self.get_cog('UserCog').start()
+        self.get_cog('DatabaseCog').start()
