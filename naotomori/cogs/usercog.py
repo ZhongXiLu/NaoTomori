@@ -112,15 +112,27 @@ class UserCog(commands.Cog):
             self.malUser = self._getMALProfile(profile)
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
-        await ctx.send('Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
+        await ctx.send(
+            'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
         self.discordUser = ctx.author
-        self.channel = ctx.channel
+        if self.channel is None:
+            self.channel = ctx.channel
 
         # Store data in database
-        self.bot.get_cog('DatabaseCog').addUser(profile, str(self.discordUser), str(ctx.channel))
+        self.bot.get_cog('DatabaseCog').addUser(profile, str(self.discordUser), str(self.channel))
 
         self._updateMALProfile(profile)
+
+    @commands.command(brief='Remove your MAL profile from the bot')
+    async def removeProfile(self, ctx):
+        self.bot.get_cog('DatabaseCog').truncateUsers()
+        self.discordUser = None
+        self.malUser = None
+        self.channel = None
+        self.bot.get_cog('AnimeCog').list = []
+        self.bot.get_cog('MangaCog').list = []
+        await ctx.send('Successfully removed you from the bot!')
 
     @commands.command(brief='Get a brief overview of your MAL profile')
     async def getProfile(self, ctx):

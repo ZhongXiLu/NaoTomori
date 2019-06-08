@@ -64,6 +64,15 @@ class DatabaseCog(commands.Cog):
         """
         await ctx.send(f'`{self.getUser()}`')
 
+    def truncateUsers(self):
+        """
+        Truncate "USERS" table, equivalent to removing the current user.
+        """
+        self.cursor.execute("""
+                    TRUNCATE USERS;
+                """)
+        self.conn.commit()
+
     def addUser(self, mal, discord, channel):
         """
         Add a new user to the database, it either updates the existing one or it will create a new entry.
@@ -74,10 +83,7 @@ class DatabaseCog(commands.Cog):
         """
 
         # We're only storing one user, so truncate table to be sure that we only have on row in the table
-        self.cursor.execute("""
-            TRUNCATE USERS;
-        """)
-        self.conn.commit()
+        self.truncateUsers()
 
         self.cursor.execute("""
             INSERT INTO USERS (mal, discord, channel) VALUES (%s, %s, %s)

@@ -2,7 +2,7 @@
 import requests
 from lxml import html
 
-from naotomori.cogs.source import Source
+from naotomori.cogs.source.source import Source
 
 
 class GoGoAnime:

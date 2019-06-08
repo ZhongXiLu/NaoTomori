@@ -1,7 +1,7 @@
 
 from discord.ext import tasks, commands
 
-from naotomori.cogs.manga.mangarock import MangaRock
+from naotomori.cogs.source.manga.mangarock import MangaRock
 from naotomori.cogs.sourcecog import SourceCog
 
 

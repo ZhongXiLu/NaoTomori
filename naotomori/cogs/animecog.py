@@ -1,7 +1,7 @@
 
 from discord.ext import tasks, commands
 
-from naotomori.cogs.anime import _9anime, gogoanime
+from naotomori.cogs.source.anime import _9anime, gogoanime
 from naotomori.cogs.sourcecog import SourceCog
 
 
