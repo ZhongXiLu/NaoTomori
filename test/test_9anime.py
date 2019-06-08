@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import MagicMock
 from lxml import html
 
-from naotomori.cogs.anime._9anime import _9Anime
+from naotomori.cogs.source.anime._9anime import _9Anime
 
 
 class Test9Anime(unittest.TestCase):

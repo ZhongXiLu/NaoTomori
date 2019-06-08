@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import MagicMock
 from lxml import html
 
-from naotomori.cogs.anime.gogoanime import GoGoAnime
+from naotomori.cogs.source.anime.gogoanime import GoGoAnime
 
 
 class TestGoGoAnime(unittest.TestCase):

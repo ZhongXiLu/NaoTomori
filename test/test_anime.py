@@ -7,7 +7,7 @@ from discord.ext import commands
 from lxml import html
 
 from naotomori.cogs import animecog
-from naotomori.cogs.anime import _9anime
+from naotomori.cogs.source.anime import _9anime
 
 
 class TestAnimeCog(asynctest.TestCase):

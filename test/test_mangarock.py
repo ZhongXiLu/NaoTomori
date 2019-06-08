@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import MagicMock
 from lxml import html
 
-from naotomori.cogs.manga.mangarock import MangaRock
+from naotomori.cogs.source.manga.mangarock import MangaRock
 
 
 class TestMangaRock(unittest.TestCase):
