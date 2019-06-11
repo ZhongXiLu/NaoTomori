@@ -14,10 +14,11 @@ Currently it supports following sources:
 - Manga:
     - [MangaRock](https://mangarock.com/)
 
-## Example Usage
+## Usage
 
-![](imgs/example.png)
-
+<img src="https://i.imgur.com/w3FczKe.png" width="800">
+<br><br>
+Just set your MyAnimeList profile with the `!setProfile` command and you're good to go. For more information on the other commands, you can use `!help`.
 
 ## Setup
 
