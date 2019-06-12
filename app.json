@@ -1,0 +1,16 @@
+{
+    "name": "NaoTomori",
+    "description": "Discord bot that pings you when a new anime episode or manga chapter is released",
+    "repository": "https://github.com/ZhongXiLu/NaoTomori",
+    "env": {
+        "DISCORD_CLIENT_TOKEN": {
+            "description": "Your Discord client token for the bot",
+            "required": true
+        }
+    },
+    "addons": [
+        {
+            "plan": "heroku-postgresql",
+        }
+    ]
+}
