@@ -38,7 +38,8 @@ class DatabaseCog(commands.Cog):
             CREATE TABLE IF NOT EXISTS USERS (
                 mal VARCHAR(32),
                 discord VARCHAR(32),
-                channel VARCHAR(100)
+                channel VARCHAR(100),
+                prefix VARCHAR(8)
             );
         """)
         self.conn.commit()
@@ -73,7 +74,7 @@ class DatabaseCog(commands.Cog):
                 """)
         self.conn.commit()
 
-    def addUser(self, mal, discord, channel):
+    def addUser(self, mal, discord, channel, prefix='!'):
         """
         Add a new user to the database, it either updates the existing one or it will create a new entry.
 
@@ -86,8 +87,8 @@ class DatabaseCog(commands.Cog):
         self.truncateUsers()
 
         self.cursor.execute("""
-            INSERT INTO USERS (mal, discord, channel) VALUES (%s, %s, %s)
-        """, (mal, discord, channel))
+            INSERT INTO USERS (mal, discord, channel, prefix) VALUES (%s, %s, %s, %s)
+        """, (mal, discord, channel, prefix))
         self.conn.commit()
 
     def getUser(self):

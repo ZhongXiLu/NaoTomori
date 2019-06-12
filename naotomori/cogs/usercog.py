@@ -45,6 +45,7 @@ class UserCog(commands.Cog):
                 pass
             self.discordUser = self._getMember(user['discord'])
             self.channel = self._getChannel(user['channel'])
+            self.bot.command_prefix = user['prefix']
 
         self.updateMalProfileLoop.start()
 
@@ -162,6 +163,18 @@ class UserCog(commands.Cog):
         self.channel = channel
         self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(channel))
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')
+
+    @commands.command(brief='Set the prefix of the bot')
+    async def setPrefix(self, ctx, prefix: str):
+        """
+        Set the prefix of the bot
+
+        :param ctx: The context.
+        :param prefix: The new prefix for the bot.
+        """
+        self.bot.command_prefix = prefix
+        self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(self.channel), prefix)
+        await ctx.send(f'Successfully set the prefix to `{prefix}`.')
 
     @setChannel.error
     async def setChannelError(self, ctx, error):
