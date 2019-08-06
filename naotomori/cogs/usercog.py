@@ -64,18 +64,25 @@ class UserCog(commands.Cog):
 
         :param profile: The username of the MAL account.
         """
-        self.bot.get_cog('AnimeCog').list.clear()
+        newAnimeList = []
         watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
         ptw = self.jikan.user(username=profile, request='animelist', argument='ptw')['anime']
         for anime in watching + ptw:
             anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
-            self.bot.get_cog('AnimeCog').list.append(anime)
-        self.bot.get_cog('MangaCog').list.clear()
+            newAnimeList.append(anime)
+
+        newMangaList = []
         reading = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
         ptr = self.jikan.user(username=profile, request='mangalist', argument='ptr')['manga']
         for manga in reading + ptr:
             manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
-            self.bot.get_cog('MangaCog').list.append(manga)
+            newMangaList.append(manga)
+
+        # If for some reason, we cannot retrieve the new lists (e.g. API error), keep the old ones
+        if newAnimeList:
+            self.bot.get_cog('AnimeCog').list = newAnimeList
+        if newMangaList:
+            self.bot.get_cog('MangaCog').list = newMangaList
 
     def _getMember(self, user):
         """
@@ -186,7 +193,7 @@ class UserCog(commands.Cog):
         """
         await ctx.send(error.args[0])
 
-    @tasks.loop(minutes=30)
+    @tasks.loop(hours=12)
     async def updateMalProfileLoop(self):
         """
         Loop that periodically updates the MAL account, i.e. update watching/reading list.
