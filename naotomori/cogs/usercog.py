@@ -85,9 +85,9 @@ class UserCog(commands.Cog):
             if newMangaList:
                 self.bot.get_cog('MangaCog').list = newMangaList
 
-        except jikanpy.exceptions.APIException:
+        except Exception as e:
             # There's nothing we can do :'(
-            pass
+            print(str(e))
 
     def _getMember(self, user):
         """
@@ -198,7 +198,7 @@ class UserCog(commands.Cog):
         """
         await ctx.send(error.args[0])
 
-    @tasks.loop(hours=12)
+    @tasks.loop(hours=1)
     async def updateMalProfileLoop(self):
         """
         Loop that periodically updates the MAL account, i.e. update watching/reading list.
