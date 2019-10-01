@@ -14,7 +14,7 @@ class _9Anime:
         """
         Constructor.
         """
-        self.url = 'https://www1.9anime.nl/home'
+        self.url = 'https://www8.9anime.ru/home'
 
     def __str__(self):
         """
