@@ -125,6 +125,8 @@ class UserCog(commands.Cog):
             self.malUser = self._getMALProfile(profile)
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
+            return
+        
         await ctx.send(
             'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
