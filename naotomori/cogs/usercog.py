@@ -1,8 +1,9 @@
-
 import discord
 import jikanpy
 from discord.ext import tasks, commands
 from jikanpy import Jikan
+
+from naotomori.util import jikanCall
 
 
 class UserCog(commands.Cog):
@@ -29,7 +30,7 @@ class UserCog(commands.Cog):
 
         :param ctx: The context.
         """
-        await ctx.send(f'Pong: {round(self.bot.latency*1000)}ms')
+        await ctx.send(f'Pong: {round(self.bot.latency * 1000)}ms')
 
     def start(self):
         """
@@ -56,7 +57,7 @@ class UserCog(commands.Cog):
         :param username: The username of the MAL account.
         :return: The MAL user.
         """
-        return self.jikan.user(username=username)
+        return jikanCall(self.jikan.user, username=username)
 
     def _updateMALProfile(self, profile):
         """
@@ -66,20 +67,21 @@ class UserCog(commands.Cog):
         """
         try:
             newAnimeList = []
-            watching = self.jikan.user(username=profile, request='animelist', argument='watching')['anime']
-            ptw = self.jikan.user(username=profile, request='animelist', argument='ptw')['anime']
+            watching = jikanCall(self.jikan.user, username=profile, request='animelist', argument='watching')['anime']
+            ptw = jikanCall(self.jikan.user, username=profile, request='animelist', argument='ptw')['anime']
             for anime in watching + ptw:
-                anime['title_english'] = self.jikan.anime(anime['mal_id'])['title_english']
+                anime['title_english'] = jikanCall(self.jikan.anime, id=anime['mal_id'])['title_english']
                 newAnimeList.append(anime)
 
             newMangaList = []
-            reading = self.jikan.user(username=profile, request='mangalist', argument='reading')['manga']
-            ptr = self.jikan.user(username=profile, request='mangalist', argument='ptr')['manga']
+            reading = jikanCall(self.jikan.user, username=profile, request='mangalist', argument='reading')['manga']
+            ptr = jikanCall(self.jikan.user, username=profile, request='mangalist', argument='ptr')['manga']
             for manga in reading + ptr:
-                manga['title_english'] = self.jikan.manga(manga['mal_id'])['title_english']
+                manga['title_english'] = jikanCall(self.jikan.manga, id=manga['mal_id'])['title_english']
                 newMangaList.append(manga)
 
             # If for some reason, we cannot retrieve the new lists (e.g. API error), keep the old ones
+            # In other words, only update the lists if we can retrieve the new ones
             if newAnimeList:
                 self.bot.get_cog('AnimeCog').list = newAnimeList
             if newMangaList:
@@ -126,9 +128,7 @@ class UserCog(commands.Cog):
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
             return
-        
-        await ctx.send(
-            'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
+        await ctx.send('Please give me a moment to set up your profile (may take some minutes)')
 
         self.discordUser = ctx.author
         if self.channel is None:
@@ -138,6 +138,8 @@ class UserCog(commands.Cog):
         self.bot.get_cog('DatabaseCog').addUser(profile, str(self.discordUser), str(self.channel))
 
         self._updateMALProfile(profile)
+        await ctx.send(
+            'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
 
     @commands.command(brief='Remove your MAL profile from the bot')
     async def removeProfile(self, ctx):
@@ -206,4 +208,4 @@ class UserCog(commands.Cog):
         Loop that periodically updates the MAL account, i.e. update watching/reading list.
         """
         if self.malUser:
-            await self._updateMALProfile(self.malUser['username'])
+            self._updateMALProfile(self.malUser['username'])
