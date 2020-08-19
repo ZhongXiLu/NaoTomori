@@ -12,7 +12,7 @@ Currently it supports following sources:
     - [GoGoAnime](https://www4.gogoanime.io/) (default)
     - [9anime](https://www1.9anime.nl/home) (does not work on [Heroku](https://www.heroku.com/))
 - Manga:
-    - [MangaRock](https://mangarock.com/)
+    - ~~[MangaRock](https://mangarock.com/)~~ (F for MangaRock 😭)
 
 ## Usage
 
