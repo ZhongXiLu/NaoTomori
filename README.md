@@ -1,7 +1,6 @@
-
 # Nao Tomori
-
 [![Build Status](https://travis-ci.org/ZhongXiLu/NaoTomori.svg?branch=master)](https://travis-ci.org/ZhongXiLu/NaoTomori)
+[![](https://github.com/ZhongXiLu/NaoTomori/workflows/Python%20CI/badge.svg)](https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22Python+CI%22)
 
 Basic [Discord](https://discordapp.com/) bot that pings you when a new anime episode or manga chapter is released, based on your [MyAnimeList](https://myanimelist.net/) account. I couldn't find any bot that does this, so I wrote one my own.
 
@@ -12,6 +11,7 @@ Currently it supports following sources:
     - [GoGoAnime](https://www4.gogoanime.io/) (default)
     - [9anime](https://www1.9anime.nl/home) (does not work on [Heroku](https://www.heroku.com/))
 - Manga:
+    - [MangaDex](https://mangadex.org/) (default)
     - ~~[MangaRock](https://mangarock.com/)~~ (F for MangaRock 😭)
 
 ## Usage
