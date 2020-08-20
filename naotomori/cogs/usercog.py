@@ -128,7 +128,7 @@ class UserCog(commands.Cog):
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
             return
-        await ctx.send('Please give me a moment to set up your profile (may take some minutes)')
+        await ctx.send('Please give me a moment to set up your profile (may take some minutes).')
 
         self.discordUser = ctx.author
         if self.channel is None:

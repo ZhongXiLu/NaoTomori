@@ -7,6 +7,7 @@ from discord.ext import commands
 from lxml import html
 
 from naotomori.cogs import mangacog
+from naotomori.cogs.source.manga.mangarock import MangaRock
 
 
 class TestMangaCog(asynctest.TestCase):
@@ -18,6 +19,7 @@ class TestMangaCog(asynctest.TestCase):
 
         cls.bot = commands.Bot(command_prefix='!')
         cls.mangaCog = mangacog.MangaCog(cls.bot)
+        cls.mangaCog.source = MangaRock()
         cls.bot.add_cog(cls.mangaCog)
 
         with open('test/test_data/mangarock_1.html') as file:

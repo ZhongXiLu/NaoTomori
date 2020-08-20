@@ -1,5 +1,7 @@
 import time
 
+from jikanpy import jikan
+
 
 def jikanCall(func, **args):
     """
@@ -7,5 +9,13 @@ def jikanCall(func, **args):
     However, since MAL enforces limitations on the request rate, we stall the internal requests to this api.
     See https://jikan.docs.apiary.io/#introduction/information/rate-limiting.
     """
-    time.sleep(6)  # here we stall (we need at least 4 seconds in between requests)
-    return func(**args)
+    while True:
+        time.sleep(6)  # here we stall (we need at least 4 seconds in between requests)
+        try:
+            return func(**args)
+        except jikan.APIException as e:
+            if e.status_code == 503:
+                print(str(e))
+                pass    # woops, we might have sent that request too fast, try again
+            else:
+                raise e

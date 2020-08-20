@@ -5,16 +5,16 @@ from lxml import html
 from naotomori.cogs.source.source import Source
 
 
-class MangaRock:
+class MangaDex:
     """
-    MangaRock: provides a minimal MangaRock api.
+    MangaDex: provides a minimal MangaDex api.
     """
 
     def __init__(self):
         """
         Constructor.
         """
-        self.url = 'https://mangarock.com'
+        self.url = 'https://mangadex.org'
 
     def __str__(self):
         """
@@ -22,7 +22,7 @@ class MangaRock:
 
         :return: Name of source/api.
         """
-        return "MangaRock"
+        return "MangaDex"
 
     def _findMangaElements(self, tree):
         """
@@ -31,7 +31,7 @@ class MangaRock:
         :param tree: The html string in form of a tree.
         :return: All the manga elements.
         """
-        return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' _1cii_ ')]")
+        return tree.xpath('//div[@id="latest_update"]/div/*')
 
     def getRecent(self):
         """
@@ -45,6 +45,9 @@ class MangaRock:
         mangaElements = []
         with requests.Session() as session:
             session.headers = {'User-Agent': 'Mozilla/5.0'}
+            session.cookies.set('mangadex_display_lang', '1')
+            session.cookies.set('mangadex_filter_langs', '1')
+            session.cookies.set('mangadex_theme', '1')
             response = session.get(self.url)
             if response.status_code == 200:
                 tree = html.fromstring(response.text)
@@ -52,17 +55,9 @@ class MangaRock:
 
         # Construct the Manga objects
         for mangaElement in mangaElements:
-            # Get the title
-            title = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _3bzTG ')]")[0].text_content()
-
-            eps = []
-            epElements = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]")
-            del epElements[1::2]   # remove duplicates
-            for epElement in epElements:
-                eps.append(epElement.text_content())
-            ep = "\n".join(eps)
-
-            link = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' _1A2Dc _217pI ')]/@href")[0]
+            title = mangaElement.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' manga_title ')]")[0].text_content()
+            ep = mangaElement.xpath(".//a[@class='text-truncate']")[0].text_content()
+            link = mangaElement.xpath(".//a[@class='text-truncate']/@href")[0]
             if link.startswith('/'):
                 # Relative path => prepend base url
                 link = self.url + link

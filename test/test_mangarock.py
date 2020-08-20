@@ -12,7 +12,7 @@ class TestMangaRock(unittest.TestCase):
     def setUp(self):
         self.mangarock = MangaRock()
 
-    def test_findAnimeElements(self):
+    def test_findMangaElements(self):
         """Test getting the manga html elements from a given mangarock html file"""
 
         with open('test/test_data/mangarock_1.html') as file:

@@ -1,7 +1,6 @@
-
 from discord.ext import tasks, commands
 
-from naotomori.cogs.source.manga.mangarock import MangaRock
+from naotomori.cogs.source.manga.mangadex import MangaDex
 from naotomori.cogs.sourcecog import SourceCog
 
 
@@ -19,7 +18,7 @@ class MangaCog(SourceCog):
         super().__init__(bot)
 
         # Replace this with your own 'Manga API' if you want to use a different manga source
-        self.source = MangaRock()
+        self.source = MangaDex()
 
     @commands.command(brief='Set the manga source for retrieving new manga')
     async def setMangaSource(self, ctx, source: str):
@@ -30,7 +29,11 @@ class MangaCog(SourceCog):
         :param source: Name of the manga source.
         """
         if source.lower() == "mangarock":
-            self.source = MangaRock()
+            await ctx.send(
+                'Unfortunately MangaRock has removed all their reading features. Please use a different source.')
+            return
+        elif source.lower() == "mangadex":
+            self.source = MangaDex()
         else:
             await ctx.send('Unknown or unsupported manga source.')
             return
