@@ -31,8 +31,7 @@ class _9Anime:
         :param tree: The html string in form of a tree.
         :return: All the anime elements.
         """
-        return tree.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' content ')\
-                                            and not(contains(concat(' ', @class, ' '), ' hidden '))]/*[1]/*[1]/*")
+        return tree.xpath('//ul[@class="anime-list"]/*')
 
     def getRecent(self):
         """
@@ -55,13 +54,13 @@ class _9Anime:
         # Construct the Anime objects
         for animeElement in animeElements:
             # Get the title
-            query = animeElement.xpath(
-                "*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@data-jtitle")
+            query = animeElement.xpath(".//@data-jtitle")
             title = query[0] if len(query) > 0 else None
-            query = animeElement.xpath(".//div[contains(concat(' ', normalize-space(@class), ' '), ' ep ')]")
+            query = animeElement.xpath(".//*[contains(concat(' ', normalize-space(@class), ' '), ' ep')]")
             ep = query[0].text_content() if len(query) > 0 else None
+            ep = "Episode" + ep     # add some extra info
             if title:
-                link = animeElement.xpath("*[1]/a[contains(concat(' ', normalize-space(@class), ' '), ' name ')]/@href")[0]
+                link = animeElement.xpath("*[1]/@href")[0]
                 if link.startswith('/'):
                     # Relative path => prepend base url
                     link = self.url + link

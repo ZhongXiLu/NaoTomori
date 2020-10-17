@@ -37,23 +37,22 @@ class TestAnimeCog(asynctest.TestCase):
 
         self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
-        self.assertEqual(len(self.animeCog.cache), 15)
+        self.assertEqual(len(self.animeCog.cache), 14)
         self.assertEqual(list(self.animeCog.cache), [
-            'Kono Yo no Hate de Koi wo Utau Shoujo YU-NO (Dub)',
-            'Shinkansen Henkei Robo Shinkalion The Animation',
-            'Mitsuboshi Colors (Dub)',
-            'Xia Gan Yi Dan Shen Jianxin',
-            'Yu☆Gi☆Oh! VRAINS',
-            'Tate no Yuusha no Nariagari',
-            'Sewayaki Kitsune no Senko-san',
-            'Tate no Yuusha no Nariagari (Dub)',
-            'Kenja no Mago',
-            'Sewayaki Kitsune no Senko-san (Dub)',
-            'Kenja no Mago (Dub)',
-            'Fight League: Gear Gadget Generators',
-            'Karakuri Circus',
-            'Hangyakusei Million Arthur 2nd Season',
-            'Carole & Tuesday'
+            'Inu to Neko Docchi mo Katteru to Mainichi Tanoshii',
+            'Pokemon (2019)',
+            'Rebirth',
+            'Strike Witches: Road to Berlin',
+            'Kanojo, Okarishimasu (Dub)',
+            'Hypnosis Mic: Division Rap Battle - Rhyme Anima',
+            "King's Raid: Ishi wo Tsugumono-tachi",
+            'Toaru Kagaku no Railgun T (Dub)',
+            'Listeners (Dub)',
+            'Dokyuu Hentai HxEros (Dub)',
+            'Cardfight!! Vanguard Gaiden: If',
+            'Enen no Shouboutai: Ni no Shou (Dub)',
+            'Dragon Quest: Dai no Daibouken (2020)',
+            'Haikyuu!!: To the Top 2nd Season'
         ])
 
     async def test_checkNewAnime(self):
@@ -62,7 +61,7 @@ class TestAnimeCog(asynctest.TestCase):
         self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
         oldCache = copy.deepcopy(self.animeCog.cache)
-        self.assertEqual(len(self.animeCog.cache), 15)
+        self.assertEqual(len(self.animeCog.cache), 14)
 
         # This allows mocking async methods, thanks to https://stackoverflow.com/a/46326234 :)
         f = Future()
@@ -74,24 +73,24 @@ class TestAnimeCog(asynctest.TestCase):
         self.animeCog.sendPing.assert_not_called()
         self.assertEqual(self.animeCog.cache, oldCache)
 
-        # User is watching 'One Punch Man 2nd Season' => should receive one ping
+        # User is watching 'The Journey of Elaina' => should receive one ping
         self.animeCog.list.append({
-            'title': 'One Punch Man 2nd Season',
-            'title_english': 'One Punch-Man 2',
-            'image_url': 'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
+            'title': 'Majo no Tabitabi',
+            'title_english': 'The Journey of Elaina',
+            'image_url': 'https://cdn.myanimelist.net/images/anime/1802/108501.jpg'
         })
-        self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes2)    # has latest ep of OPM S2
+        self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes2)    # contains latest ep of Elaina
         oldCache = copy.deepcopy(self.animeCog.cache)
 
         self.animeCog.sendPing = MagicMock(return_value=f)
         await self.animeCog.checkNew()
         self.assertEqual(self.animeCog.sendPing.call_count, 1)
         self.animeCog.sendPing.assert_called_once_with(
-            'One Punch Man 2nd Season',
-            ' Ep 8/12',
-            'https://www1.9anime.nl/watch/one-punch-man-2nd-season.qqmj',
-            'https://cdn.myanimelist.net/images/anime/1805/99571.jpg?s=76893d6eb26f8add6731bcfa56f243ec'
+            'Majo no Tabitabi',
+            'Episode 3/12 ',
+            'https://www12.9anime.ru/watch/the-journey-of-elaina.9vnn?ep=3',
+            'https://cdn.myanimelist.net/images/anime/1802/108501.jpg'
         )
         self.assertNotEqual(self.animeCog.cache, oldCache)
-        self.assertEqual(self.animeCog.cache[-1], 'One Punch Man 2nd Season')
+        self.assertEqual(self.animeCog.cache[-1], 'Majo no Tabitabi')
 
