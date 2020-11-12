@@ -16,15 +16,9 @@ jobs:
         python-version: 3.8
     - name: Install pip dependencies
       run: sudo apt install libxml2-dev libxslt1-dev libpq-dev
-    - uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
     - name: Install pip requirements
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run Unit Tests
+        pip install lxml==4.3.3 requests==2.22.0
+    - name: Run API Test
       run: python -m unittest -v test.test_api.TestApi
