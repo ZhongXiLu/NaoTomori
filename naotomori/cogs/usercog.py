@@ -39,14 +39,16 @@ class UserCog(commands.Cog):
             - start the updateMalProfileLoop
         """
         user = self.bot.get_cog('DatabaseCog').getUser()
-        if user:
+        if user[0] != '':
             try:
-                self.malUser = self._getMALProfile(user['mal'])
+                self.malUser = self._getMALProfile(user[0])
             except jikanpy.exceptions.APIException:
                 pass
-            self.discordUser = self._getMember(user['discord'])
-            self.channel = self._getChannel(user['channel'])
-            self.bot.command_prefix = user['prefix']
+            self.discordUser = self._getMember(user[1])
+        if user[2] != '':
+            self.channel = self._getChannel(user[2])
+        if user[3] != '':
+            self.bot.command_prefix = user[3]
 
         self.updateMalProfileLoop.start()
 
@@ -133,9 +135,10 @@ class UserCog(commands.Cog):
         self.discordUser = ctx.author
         if self.channel is None:
             self.channel = ctx.channel
+            self.bot.get_cog('DatabaseCog').setChannel(str(self.channel))
 
         # Store data in database
-        self.bot.get_cog('DatabaseCog').addUser(profile, str(self.discordUser), str(self.channel))
+        self.bot.get_cog('DatabaseCog').setProfile(profile, str(self.discordUser))
 
         self._updateMALProfile(profile)
         await ctx.send(
@@ -143,7 +146,7 @@ class UserCog(commands.Cog):
 
     @commands.command(brief='Remove your MAL profile from the bot')
     async def removeProfile(self, ctx):
-        self.bot.get_cog('DatabaseCog').truncateUsers()
+        self.bot.get_cog('DatabaseCog').setProfile("", "")
         self.discordUser = None
         self.malUser = None
         self.channel = None
@@ -177,7 +180,7 @@ class UserCog(commands.Cog):
         :param channel: Name of the bot channel.
         """
         self.channel = channel
-        self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(channel))
+        self.bot.get_cog('DatabaseCog').setChannel(str(channel))
         await ctx.send(f'Successfully set bot channel to {channel.mention}.')
 
     @commands.command(brief='Set the prefix of the bot')
@@ -189,7 +192,7 @@ class UserCog(commands.Cog):
         :param prefix: The new prefix for the bot.
         """
         self.bot.command_prefix = prefix
-        self.bot.get_cog('DatabaseCog').addUser(self.malUser['username'], str(self.discordUser), str(self.channel), prefix)
+        self.bot.get_cog('DatabaseCog').setPrefix(prefix)
         await ctx.send(f'Successfully set the prefix to `{prefix}`.')
 
     @setChannel.error

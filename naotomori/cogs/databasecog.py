@@ -1,4 +1,3 @@
-
 import os
 import psycopg2
 from psycopg2.extras import DictCursor
@@ -42,6 +41,12 @@ class DatabaseCog(commands.Cog):
                 prefix VARCHAR(8)
             );
         """)
+
+        if not self.getUser():
+            self.cursor.execute("""
+                INSERT INTO USERS (mal, discord, channel, prefix) VALUES (%s, %s, %s, %s)
+            """, ("", "", "", ""))
+
         self.conn.commit()
 
     @commands.command(brief='Recreate the database (tables)')
@@ -51,7 +56,7 @@ class DatabaseCog(commands.Cog):
         :param ctx: The context.
         """
         self.cursor.execute("""
-            DROP TABLE USERS;
+            DROP TABLE USERS CASCADE;
         """)
         self.conn.commit()
         await ctx.send('Successfully recreated database.')
@@ -63,32 +68,49 @@ class DatabaseCog(commands.Cog):
         Get the row of the 'USERS' table (should only be one atm), i.e. the current user.
         :param ctx: The context.
         """
-        await ctx.send(f'`{self.getUser()}`')
+        await ctx.send(f'`{str(self.getUser())}`')
 
-    def truncateUsers(self):
+    def setProfile(self, mal, discord):
         """
-        Truncate "USERS" table, equivalent to removing the current user.
-        """
-        self.cursor.execute("""
-                    TRUNCATE USERS;
-                """)
-        self.conn.commit()
-
-    def addUser(self, mal, discord, channel, prefix='!'):
-        """
-        Add a new user to the database, it either updates the existing one or it will create a new entry.
+        Set the user profile.
 
         :param mal: The MAL username.
         :param discord: The Discord username (name + tag).
-        :param channel: The bot channel name.
         """
-
-        # We're only storing one user, so truncate table to be sure that we only have on row in the table
-        self.truncateUsers()
-
         self.cursor.execute("""
-            INSERT INTO USERS (mal, discord, channel, prefix) VALUES (%s, %s, %s, %s)
-        """, (mal, discord, channel, prefix))
+            WITH profile AS (SELECT * FROM USERS LIMIT 1)
+            UPDATE USERS
+            SET mal = %s, discord = %s
+            FROM profile
+        """, (mal, discord))
+        self.conn.commit()
+
+    def setChannel(self, channel):
+        """
+        Set the bot channel.
+
+        :param channel: Name of the bot channel.
+        """
+        self.cursor.execute("""
+            WITH profile AS (SELECT * FROM USERS LIMIT 1)
+            UPDATE USERS
+            SET channel = %s
+            FROM profile
+        """, (channel,))
+        self.conn.commit()
+
+    def setPrefix(self, prefix):
+        """
+        Set the prefix of the bot
+
+        :param prefix: The new prefix for the bot.
+        """
+        self.cursor.execute("""
+            WITH profile AS (SELECT * FROM USERS LIMIT 1)
+            UPDATE USERS
+            SET prefix = %s
+            FROM profile
+        """, (prefix,))
         self.conn.commit()
 
     def getUser(self):
