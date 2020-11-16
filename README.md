@@ -1,5 +1,4 @@
 # Nao Tomori
-[![Build Status](https://travis-ci.org/ZhongXiLu/NaoTomori.svg?branch=master)](https://travis-ci.org/ZhongXiLu/NaoTomori)
 [![](https://github.com/ZhongXiLu/NaoTomori/workflows/Python%20CI/badge.svg)](https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22Python+CI%22)
 [![](https://github.com/ZhongXiLu/NaoTomori/workflows/API%20CI/badge.svg)](https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22API+CI%22)
 [![codecov](https://codecov.io/gh/ZhongXiLu/NaoTomori/branch/master/graph/badge.svg)](https://codecov.io/gh/ZhongXiLu/NaoTomori)
