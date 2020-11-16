@@ -50,7 +50,8 @@ class UserCog(commands.Cog):
         if user[3] != '':
             self.bot.command_prefix = user[3]
 
-        self.updateMalProfileLoop.start()
+        if not self.updateMalProfileLoop.is_running():
+            self.updateMalProfileLoop.start()
 
     def _getMALProfile(self, username):
         """

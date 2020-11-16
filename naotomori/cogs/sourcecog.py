@@ -29,7 +29,8 @@ class SourceCog(commands.Cog):
             - start the checkNewLoop
         """
         self.fillCache()
-        self.checkNewLoop.start()
+        if not self.checkNewLoop.is_running():
+            self.checkNewLoop.start()
 
     def fillCache(self):
         """
@@ -52,7 +53,9 @@ class SourceCog(commands.Cog):
         embed = discord.Embed(title=title, description=progress, color=discord.Color.green())
         embed.add_field(name="Link", value=f"[{link}]({link})")
         embed.set_thumbnail(url=image)
-        await self.bot.get_cog('UserCog').channel.send(self.bot.get_cog('UserCog').discordUser.mention, embed=embed)
+        discordUser = self.bot.get_cog('UserCog').discordUser
+        if discordUser:
+            await self.bot.get_cog('UserCog').channel.send(discordUser.mention, embed=embed)
 
     async def checkNew(self):
         """
