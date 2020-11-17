@@ -1,3 +1,5 @@
+from threading import Thread
+
 import discord
 import jikanpy
 from discord.ext import tasks, commands
@@ -131,7 +133,6 @@ class UserCog(commands.Cog):
         except jikanpy.exceptions.APIException:
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
             return
-        await ctx.send('Please give me a moment to set up your profile (may take some minutes).')
 
         self.discordUser = ctx.author
         if self.channel is None:
@@ -141,9 +142,12 @@ class UserCog(commands.Cog):
         # Store data in database
         self.bot.get_cog('DatabaseCog').setProfile(profile, str(self.discordUser))
 
-        self._updateMALProfile(profile)
+        thread = Thread(target=self._updateMALProfile, args=(profile,))
+        thread.start()
         await ctx.send(
-            'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!')
+            'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!\n'
+            'It still may take some for your profile to update.'
+        )
 
     @commands.command(brief='Remove your MAL profile from the bot')
     async def removeProfile(self, ctx):
@@ -206,10 +210,11 @@ class UserCog(commands.Cog):
         """
         await ctx.send(error.args[0])
 
-    @tasks.loop(hours=1)
+    @tasks.loop(hours=3)
     async def updateMalProfileLoop(self):
         """
         Loop that periodically updates the MAL account, i.e. update watching/reading list.
         """
         if self.malUser:
-            self._updateMALProfile(self.malUser['username'])
+            thread = Thread(target=self._updateMALProfile, args=(self.malUser['username'],))
+            thread.start()

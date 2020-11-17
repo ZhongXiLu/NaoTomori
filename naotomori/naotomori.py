@@ -14,6 +14,7 @@ class NaoTomori(commands.Bot):
         """
         Constructor: initialize the bot, add and start all the cogs.
         """
+        self.started = False
         super().__init__(*args, **kwargs)
 
         self.add_cog(usercog.UserCog(self))
@@ -21,14 +22,17 @@ class NaoTomori(commands.Bot):
         self.add_cog(mangacog.MangaCog(self))
         self.add_cog(databasecog.DatabaseCog(self))
 
-        self.get_cog('DatabaseCog').start()
-        self.get_cog('AnimeCog').start()
-        self.get_cog('MangaCog').start()
-        self.get_cog('UserCog').start()
-
     async def on_ready(self):
         """
         Called when the bot is 'ready'.
         """
+        await self.change_presence(activity=discord.Game(name="Setting up"))
+        if not self.started:
+            self.started = True
+            self.get_cog('DatabaseCog').start()
+            self.get_cog('AnimeCog').start()
+            self.get_cog('MangaCog').start()
+            self.get_cog('UserCog').start()
+
         print(f"Logged in as {self.user.name}")
         await self.change_presence(activity=discord.Game(name="Running!"))

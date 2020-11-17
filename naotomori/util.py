@@ -10,7 +10,7 @@ def jikanCall(func, **args):
     See https://jikan.docs.apiary.io/#introduction/information/rate-limiting.
     """
     while True:
-        time.sleep(6)  # here we stall (we need at least 4 seconds in between requests)
+        time.sleep(4.20)  # here we stall (we need at least 4 seconds in between requests)
         try:
             return func(**args)
         except jikan.APIException as e:
