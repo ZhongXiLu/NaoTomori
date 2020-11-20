@@ -146,7 +146,7 @@ class UserCog(commands.Cog):
         thread.start()
         await ctx.send(
             'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!\n'
-            'It still may take some for your profile to update.'
+            'It still may take some time for your profile to update.'
         )
 
     @commands.command(brief='Remove your MAL profile from the bot')
@@ -171,7 +171,8 @@ class UserCog(commands.Cog):
             embed.add_field(name="Watching/Plan-to-Watch", value=str(len(self.bot.get_cog('AnimeCog').list)))
             embed.add_field(name="Reading/Plan-to-Read", value=str(len(self.bot.get_cog('MangaCog').list)))
             embed.add_field(name="Link", value=self.malUser['url'])
-            embed.set_thumbnail(url=self.malUser['image_url'])
+            if self.malUser['image_url']:
+                embed.set_thumbnail(url=self.malUser['image_url'])
             await ctx.send(embed=embed)
         else:
             await ctx.send("Profile is not set, please use `!setProfile <USERNAME>` first.")
