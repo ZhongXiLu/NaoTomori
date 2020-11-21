@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import tasks, commands
 from collections import deque
@@ -37,7 +36,7 @@ class SourceCog(commands.Cog):
         Fill the cache by retrieving the current entries from the source.
         """
         items = self.source.getRecent()
-        items.reverse()    # make sure the most recent ones are added last to the cache
+        items.reverse()  # make sure the most recent ones are added last to the cache
         for item in items:
             self.cache.append(item.title)
 
@@ -50,8 +49,7 @@ class SourceCog(commands.Cog):
         :param link: Link to the anime/manga.
         :param image: Link of a thumbnail of the anime/manga.
         """
-        embed = discord.Embed(title=title, description=progress, color=discord.Color.green())
-        embed.add_field(name="Link", value=f"[{link}]({link})")
+        embed = discord.Embed(title=title, description=progress, url=link, color=discord.Color.green())
         embed.set_thumbnail(url=image)
         discordUser = self.bot.get_cog('UserCog').discordUser
         if discordUser:

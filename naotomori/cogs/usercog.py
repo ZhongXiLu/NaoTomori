@@ -1,9 +1,13 @@
+import io
+from datetime import datetime, timedelta
 from threading import Thread
 
 import discord
 import jikanpy
+import timeago
 from discord.ext import tasks, commands
 from jikanpy import Jikan
+from tqdm import tqdm
 
 from naotomori.util import jikanCall
 
@@ -24,6 +28,8 @@ class UserCog(commands.Cog):
         self.malUser = None
         self.channel = None
         self.jikan = Jikan()
+        self.progress = io.StringIO("⌛ Please wait a bit")
+        self.lastUpdated = None
 
     @commands.command(brief='Ping the bot')
     async def ping(self, ctx):
@@ -72,18 +78,36 @@ class UserCog(commands.Cog):
         """
         try:
             newAnimeList = []
+            newMangaList = []
+
             watching = jikanCall(self.jikan.user, username=profile, request='animelist', argument='watching')['anime']
             ptw = jikanCall(self.jikan.user, username=profile, request='animelist', argument='ptw')['anime']
+            reading = jikanCall(self.jikan.user, username=profile, request='mangalist', argument='reading')['manga']
+            ptr = jikanCall(self.jikan.user, username=profile, request='mangalist', argument='ptr')['manga']
+
+            pbar = None
+            if self.progress:
+                # Set up progressbar in case it is the first time setting the user's profile
+                pbar = tqdm(
+                    total=len(watching) + len(ptw) + len(reading) + len(ptr), file=self.progress, ncols=40,
+                    bar_format="⌛{desc}: {n_fmt}/{total_fmt} [Remaining: {remaining}]"
+                )
+
             for anime in watching + ptw:
                 anime['title_english'] = jikanCall(self.jikan.anime, id=anime['mal_id'])['title_english']
                 newAnimeList.append(anime)
+                if self.progress:
+                    self.progress.truncate(0)  # clear previous output
+                    self.progress.seek(0)
+                    pbar.update()
 
-            newMangaList = []
-            reading = jikanCall(self.jikan.user, username=profile, request='mangalist', argument='reading')['manga']
-            ptr = jikanCall(self.jikan.user, username=profile, request='mangalist', argument='ptr')['manga']
             for manga in reading + ptr:
                 manga['title_english'] = jikanCall(self.jikan.manga, id=manga['mal_id'])['title_english']
                 newMangaList.append(manga)
+                if self.progress:
+                    self.progress.truncate(0)
+                    self.progress.seek(0)
+                    pbar.update()
 
             # If for some reason, we cannot retrieve the new lists (e.g. API error), keep the old ones
             # In other words, only update the lists if we can retrieve the new ones
@@ -92,9 +116,16 @@ class UserCog(commands.Cog):
             if newMangaList:
                 self.bot.get_cog('MangaCog').list = newMangaList
 
+            self.lastUpdated = datetime.now()
+
         except Exception as e:
             # There's nothing we can do :'(
             print(str(e))
+
+        if self.progress:
+            self.progress.close()
+
+        self.progress = None  # no need in the future (only need progressbar for the first set up)
 
     def _getMember(self, user):
         """
@@ -134,6 +165,9 @@ class UserCog(commands.Cog):
             await ctx.send(f'Unable to find user {profile}, make sure the profile is public.')
             return
 
+        self.progress = io.StringIO("⌛ Please wait a bit")  # start new profile
+        self.bot.get_cog('AnimeCog').list = []
+        self.bot.get_cog('MangaCog').list = []
         self.discordUser = ctx.author
         if self.channel is None:
             self.channel = ctx.channel
@@ -145,8 +179,8 @@ class UserCog(commands.Cog):
         thread = Thread(target=self._updateMALProfile, args=(profile,))
         thread.start()
         await ctx.send(
-            'Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!\n'
-            'It still may take some time for your profile to update.'
+            '🎉 Successfully set profile, you\'ll now receive notifications for new anime episodes and manga chapters!\n'
+            '🍵 It still may take some time for your profile to update though.'
         )
 
     @commands.command(brief='Remove your MAL profile from the bot')
@@ -157,7 +191,7 @@ class UserCog(commands.Cog):
         self.channel = None
         self.bot.get_cog('AnimeCog').list = []
         self.bot.get_cog('MangaCog').list = []
-        await ctx.send('Successfully removed you from the bot!')
+        await ctx.send('😢 Successfully removed you from the bot!')
 
     @commands.command(brief='Get a brief overview of your MAL profile')
     async def getProfile(self, ctx):
@@ -166,14 +200,26 @@ class UserCog(commands.Cog):
 
         :param ctx: The context.
         """
-        if self.malUser:
-            embed = discord.Embed(title=self.malUser['username'], color=discord.Color.green())
-            embed.add_field(name="Watching/Plan-to-Watch", value=str(len(self.bot.get_cog('AnimeCog').list)))
-            embed.add_field(name="Reading/Plan-to-Read", value=str(len(self.bot.get_cog('MangaCog').list)))
-            embed.add_field(name="Link", value=self.malUser['url'])
+        if self.progress and self.malUser:
+            embed = discord.Embed(title=self.malUser['username'], color=discord.Color.green(), url=self.malUser['url'])
+            embed.add_field(name="🔧 Setting up profile", value=str(self.progress.getvalue()))
             if self.malUser['image_url']:
                 embed.set_thumbnail(url=self.malUser['image_url'])
             await ctx.send(embed=embed)
+
+        elif self.malUser:
+            embed = discord.Embed(title=self.malUser['username'], color=discord.Color.green(), url=self.malUser['url'])
+            embed.add_field(name="Currently Watching / Plan-to-Watch Anime",
+                            value=str(len(self.bot.get_cog('AnimeCog').list)), inline=False)
+            embed.add_field(name="Currently Reading / Plan-to-Read Manga",
+                            value=str(len(self.bot.get_cog('MangaCog').list)), inline=False)
+            if self.lastUpdated:
+                now = datetime.now() + timedelta(seconds=60 * 3.4)
+                embed.set_footer(text=f"Last updated: {timeago.format(self.lastUpdated, now)}")
+            if self.malUser['image_url']:
+                embed.set_thumbnail(url=self.malUser['image_url'])
+            await ctx.send(embed=embed)
+
         else:
             await ctx.send("Profile is not set, please use `!setProfile <USERNAME>` first.")
 
@@ -187,7 +233,7 @@ class UserCog(commands.Cog):
         """
         self.channel = channel
         self.bot.get_cog('DatabaseCog').setChannel(str(channel))
-        await ctx.send(f'Successfully set bot channel to {channel.mention}.')
+        await ctx.send(f'📺 Successfully set bot channel to {channel.mention}.')
 
     @commands.command(brief='Set the prefix of the bot')
     async def setPrefix(self, ctx, prefix: str):
@@ -199,7 +245,7 @@ class UserCog(commands.Cog):
         """
         self.bot.command_prefix = prefix
         self.bot.get_cog('DatabaseCog').setPrefix(prefix)
-        await ctx.send(f'Successfully set the prefix to `{prefix}`.')
+        await ctx.send(f'❗ Successfully set the prefix to `{prefix}`.')
 
     @setChannel.error
     async def setChannelError(self, ctx, error):
