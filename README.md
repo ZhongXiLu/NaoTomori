@@ -56,11 +56,11 @@ Just set your MyAnimeList profile with the `!setProfile` command and you're good
     </tr>
     <tr>
         <td>setAnimeSource</td>
-        <td>Set the anime source for retrieving new anime</td>
+        <td>Set the anime source for retrieving new anime (set source to "none" to remove the anime source)</td>
     </tr>
     <tr>
         <td>setMangaSource</td>
-        <td>Set the manga source for retrieving new manga</td>
+        <td>Set the manga source for retrieving new manga (set source to "none" to remove the manga source)</td>
     </tr>
 </table>
 

@@ -35,10 +35,11 @@ class SourceCog(commands.Cog):
         """
         Fill the cache by retrieving the current entries from the source.
         """
-        items = self.source.getRecent()
-        items.reverse()  # make sure the most recent ones are added last to the cache
-        for item in items:
-            self.cache.append(item.title)
+        if self.source:
+            items = self.source.getRecent()
+            items.reverse()  # make sure the most recent ones are added last to the cache
+            for item in items:
+                self.cache.append(item.title)
 
     async def sendPing(self, title, progress, link, image):
         """
@@ -60,18 +61,19 @@ class SourceCog(commands.Cog):
         Check for new entries (anime/manga) based on the source.
         If new one's are found, it will add it to the cache and send a ping (sendPing) if necessary.
         """
-        items = self.source.getRecent()
-        items.reverse()
-        if items:
-            for item in items:
-                if item.title not in self.cache:
-                    print(f'{str(self.source)}: {item.title}')
-                    self.cache.append(item.title)
-                    for itemList in self.list:
-                        if item.title == itemList['title'] or item.title == itemList['title_english']:
-                            await self.sendPing(item.title, item.progress, item.link, itemList['image_url'])
-        else:
-            print(f'Failed retrieving from {str(self.source)}')
+        if self.source:
+            items = self.source.getRecent()
+            items.reverse()
+            if items:
+                for item in items:
+                    if item.title not in self.cache:
+                        print(f'{str(self.source)}: {item.title}')
+                        self.cache.append(item.title)
+                        for itemList in self.list:
+                            if item.title == itemList['title'] or item.title == itemList['title_english']:
+                                await self.sendPing(item.title, item.progress, item.link, itemList['image_url'])
+            else:
+                print(f'Failed retrieving from {str(self.source)}')
 
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):

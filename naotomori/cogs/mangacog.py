@@ -20,7 +20,8 @@ class MangaCog(SourceCog):
         # Replace this with your own 'Manga API' if you want to use a different manga source
         self.source = MangaDex()
 
-    @commands.command(brief='Set the manga source for retrieving new manga')
+    @commands.command(
+        brief='Set the manga source for retrieving new manga (set source to "none" to remove the manga source)')
     async def setMangaSource(self, ctx, source: str):
         """
         Set the manga source, i.e. where it will retrieve the manga from.
@@ -34,6 +35,11 @@ class MangaCog(SourceCog):
             return
         elif source.lower() == "mangadex":
             self.source = MangaDex()
+        elif source.lower() == "none":
+            self.source = None
+            self.list.clear()
+            await ctx.send(f'Successfully removed the manga source.')
+            return
         else:
             await ctx.send('Unknown or unsupported manga source.')
             return
