@@ -17,7 +17,7 @@ Currently it supports following sources:
 
 ## Usage
 
-<img src="https://i.imgur.com/w3FczKe.png" width="800">
+<img src="https://i.imgur.com/xaSPIDp.png" width="800">
 
 Just set your MyAnimeList profile with the `!setProfile` command and you're good to go. For more information on the other commands, you can use `!help` or check the table below.
 
