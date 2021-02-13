@@ -61,6 +61,26 @@ class AnimeCog(SourceCog):
             return False
         return True
 
+    @commands.command(brief='Ignore an anime (don\'t send pings for a certain anime)')
+    async def ignoreAnime(self, ctx, *args):
+        """
+        Ignore an anime.
+
+        :param ctx: The context.
+        :param args: Name of the anime.
+        """
+        await super(AnimeCog, self).ignore(ctx, True, *args)
+
+    @commands.command(brief='Unignore an anime')
+    async def unignoreAnime(self, ctx, *args):
+        """
+        Unignore an anime.
+
+        :param ctx: The context.
+        :param args: Name of the anime.
+        """
+        await super(AnimeCog, self).unignore(ctx, True, *args)
+
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):
         """

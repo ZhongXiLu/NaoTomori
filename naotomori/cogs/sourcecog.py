@@ -18,6 +18,7 @@ class SourceCog(commands.Cog):
         """
         self.bot = bot
         self.list = []  # currently watching/reading list
+        self.ignore = set()  # titles to ignore
         self.cache = deque(maxlen=32)
         self.source = None
 
@@ -56,6 +57,54 @@ class SourceCog(commands.Cog):
         if discordUser:
             await self.bot.get_cog('UserCog').channel.send(discordUser.mention, embed=embed)
 
+    async def ignore(self, ctx, is_anime, *args):
+        """
+        Ignore a title (anime or manga).
+
+        :param ctx: The context.
+        :param is_anime: Whether the title is an anime or a manga.
+        :param args: Name of the title.
+        """
+        title = " ".join(args[:]).lower()
+        for itemList in self.list:
+            if title == itemList['title'].lower() or title == str(itemList['title_english']).lower():
+                mal_id = itemList['mal_id']
+                self.ignore.add(mal_id)
+                self._update_ignore_list(is_anime)
+                await ctx.send(f'Successfully ignored "{itemList["title"]}".')
+                return
+        await ctx.send(f'Could not find "{" ".join(args[:])}" in your MAL lists.')
+
+    async def unignore(self, ctx, is_anime, *args):
+        """
+        Unignore a title (anime or manga).
+
+        :param ctx: The context.
+        :param is_anime: Whether the title is an anime or a manga.
+        :param args: Name of the title.
+        """
+        title = " ".join(args[:]).lower()
+        for itemList in self.list:
+            if title == itemList['title'].lower() or title == str(itemList['title_english']).lower():
+                mal_id = itemList['mal_id']
+                if mal_id in self.ignore:
+                    self.ignore.remove(mal_id)
+                    self._update_ignore_list(is_anime)
+                    await ctx.send(f'Successfully unignored "{itemList["title"]}".')
+                    return
+        await ctx.send(f'Could not find "{" ".join(args[:])}" in your MAL lists.')
+
+    def _update_ignore_list(self, is_anime):
+        """
+        Update the ignore list (anime or manga) in the database.
+
+        :param is_anime: Whether to update the anime or manga ignore list.
+        """
+        if is_anime:
+            self.bot.get_cog('DatabaseCog').updateValue("anime_ignored", repr(self.ignore))
+        else:
+            self.bot.get_cog('DatabaseCog').updateValue("manga_ignored", repr(self.ignore))
+
     async def checkNew(self):
         """
         Check for new entries (anime/manga) based on the source.
@@ -71,7 +120,8 @@ class SourceCog(commands.Cog):
                         self.cache.append(item.title)
                         for itemList in self.list:
                             if item.title == itemList['title'] or item.title == itemList['title_english']:
-                                await self.sendPing(item.title, item.progress, item.link, itemList['image_url'])
+                                if itemList['mal_id'] not in self.ignore:
+                                    await self.sendPing(item.title, item.progress, item.link, itemList['image_url'])
             else:
                 print(f'Failed retrieving from {str(self.source)}')
 

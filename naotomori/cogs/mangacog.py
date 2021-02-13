@@ -62,6 +62,26 @@ class MangaCog(SourceCog):
             return False
         return True
 
+    @commands.command(brief='Ignore a manga (don\'t send pings for a certain manga)')
+    async def ignoreManga(self, ctx, *args):
+        """
+        Ignore a manga.
+
+        :param ctx: The context.
+        :param args: Name of the manga.
+        """
+        await super(MangaCog, self).ignore(ctx, False, *args)
+
+    @commands.command(brief='Unignore a manga')
+    async def unignoreManga(self, ctx, *args):
+        """
+        Unignore a manga.
+
+        :param ctx: The context.
+        :param args: Name of the manga.
+        """
+        await super(MangaCog, self).unignore(ctx, False, *args)
+
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):
         """

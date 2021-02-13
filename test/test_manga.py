@@ -77,6 +77,7 @@ class TestMangaCog(asynctest.TestCase):
 
         # User is reading '3-gatsu no Lion' => should receive one ping
         self.mangaCog.list.append({
+            'mal_id': 1,
             'title': '3-gatsu no Lion',
             'title_english': 'March Comes in Like a Lion',
             'image_url': 'https://cdn.myanimelist.net/images/manga/1/52281.jpg'

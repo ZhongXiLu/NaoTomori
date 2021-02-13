@@ -61,6 +61,10 @@ class UserCog(commands.Cog):
             self.bot.get_cog('AnimeCog')._setAnimeSource(anime_source)
         if manga_source != '':
             self.bot.get_cog('MangaCog')._setMangaSource(manga_source)
+        if anime_ignored != '':
+            self.bot.get_cog('AnimeCog').ignore = eval(anime_ignored)
+        if manga_ignored != '':
+            self.bot.get_cog('MangaCog').ignore = eval(manga_ignored)
 
         if not self.updateMalProfileLoop.is_running():
             self.updateMalProfileLoop.start()

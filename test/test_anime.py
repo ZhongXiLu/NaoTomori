@@ -75,6 +75,7 @@ class TestAnimeCog(asynctest.TestCase):
 
         # User is watching 'The Journey of Elaina' => should receive one ping
         self.animeCog.list.append({
+            'mal_id': 1,
             'title': 'Majo no Tabitabi',
             'title_english': 'The Journey of Elaina',
             'image_url': 'https://cdn.myanimelist.net/images/anime/1802/108501.jpg'
