@@ -94,3 +94,12 @@ class TestAnimeCog(asynctest.TestCase):
         self.assertNotEqual(self.animeCog.cache, oldCache)
         self.assertEqual(self.animeCog.cache[-1], 'Majo no Tabitabi')
 
+    def test_setAnimeSource(self):
+        """Test setting a new anime source"""
+        self.assertTrue(self.animeCog._setAnimeSource("9anime"))
+        self.assertEqual("9anime", str(self.animeCog.source))
+        self.assertTrue(self.animeCog._setAnimeSource("gogoanime"))
+        self.assertEqual("GoGoAnime", str(self.animeCog.source))
+        self.assertTrue(self.animeCog._setAnimeSource("none"))
+        self.assertIsNone(self.animeCog.source)
+        self.assertFalse(self.animeCog._setAnimeSource("random source"))

@@ -46,17 +46,21 @@ class UserCog(commands.Cog):
             - retrieves the user from the database, if possible
             - start the updateMalProfileLoop
         """
-        user = self.bot.get_cog('DatabaseCog').getUser()
-        if user[0] != '':
+        mal, discord, channel, prefix, anime_source, manga_source, anime_ignored, manga_ignored = self.bot.get_cog('DatabaseCog').getUser()
+        if mal != '':
             try:
-                self.malUser = self._getMALProfile(user[0])
+                self.malUser = self._getMALProfile(mal)
             except jikanpy.exceptions.APIException:
                 pass
-            self.discordUser = self._getMember(user[1])
-        if user[2] != '':
-            self.channel = self._getChannel(user[2])
-        if user[3] != '':
-            self.bot.command_prefix = user[3]
+            self.discordUser = self._getMember(discord)
+        if channel != '':
+            self.channel = self._getChannel(channel)
+        if prefix != '':
+            self.bot.command_prefix = prefix
+        if anime_source != '':
+            self.bot.get_cog('AnimeCog')._setAnimeSource(anime_source)
+        if manga_source != '':
+            self.bot.get_cog('MangaCog')._setMangaSource(manga_source)
 
         if not self.updateMalProfileLoop.is_running():
             self.updateMalProfileLoop.start()
@@ -232,7 +236,7 @@ class UserCog(commands.Cog):
         :param channel: Name of the bot channel.
         """
         self.channel = channel
-        self.bot.get_cog('DatabaseCog').setChannel(str(channel))
+        self.bot.get_cog('DatabaseCog').updateValue("channel", str(channel))
         await ctx.send(f'📺 Successfully set bot channel to {channel.mention}.')
 
     @commands.command(brief='Set the prefix of the bot')
@@ -244,7 +248,7 @@ class UserCog(commands.Cog):
         :param prefix: The new prefix for the bot.
         """
         self.bot.command_prefix = prefix
-        self.bot.get_cog('DatabaseCog').setPrefix(prefix)
+        self.bot.get_cog('DatabaseCog').updateValue("prefix", prefix)
         await ctx.send(f'❗ Successfully set the prefix to `{prefix}`.')
 
     @setChannel.error

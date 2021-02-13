@@ -29,23 +29,38 @@ class MangaCog(SourceCog):
         :param ctx: The context.
         :param source: Name of the manga source.
         """
+        successful = self._setMangaSource(source)
+        if successful:
+            self.bot.get_cog('DatabaseCog').updateValue("manga_source", source)
         if source.lower() == "mangarock":
             await ctx.send(
                 'Unfortunately MangaRock has removed all their reading features. Please use a different source.')
             return
-        elif source.lower() == "mangadex":
-            self.source = MangaDex()
         elif source.lower() == "none":
-            self.source = None
             self.list.clear()
             await ctx.send(f'Successfully removed the manga source.')
             return
-        else:
+        elif not successful:
             await ctx.send('Unknown or unsupported manga source.')
             return
         self.list.clear()
         self.fillCache()
         await ctx.send(f'Successfully set the manga source to {source}.')
+
+    def _setMangaSource(self, source):
+        """
+        Set the manga source, i.e. where it will retrieve the manga from.
+
+        :param source: Name of the manga source.
+        :return True if successful, False otherwise.
+        """
+        if source.lower() == "mangadex":
+            self.source = MangaDex()
+        elif source.lower() == "none":
+            self.source = None
+        else:
+            return False
+        return True
 
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):

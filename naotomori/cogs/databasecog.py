@@ -33,19 +33,37 @@ class DatabaseCog(commands.Cog):
         """
         Start the DatabaseCog: creates the table if it didn't exist already.
         """
+
+        # Get old user if there is one
+        user = self.getUser()
+        if not user:
+            user = []
+        while len(user) < 8:
+            user.append("")
+        user = tuple(user)
+
+        # Recreate db
         self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS USERS (
+            DROP TABLE USERS CASCADE;
+        """)
+        self.cursor.execute("""
+            CREATE TABLE USERS (
                 mal VARCHAR(32),
                 discord VARCHAR(32),
                 channel VARCHAR(100),
-                prefix VARCHAR(8)
+                prefix VARCHAR(8),
+                anime_source VARCHAR(32),
+                manga_source VARCHAR(32),
+                anime_ignored VARCHAR,
+                manga_ignored VARCHAR
             );
         """)
 
-        if not self.getUser():
-            self.cursor.execute("""
-                INSERT INTO USERS (mal, discord, channel, prefix) VALUES (%s, %s, %s, %s)
-            """, ("", "", "", ""))
+        # Add new user
+        self.cursor.execute("""
+            INSERT INTO USERS (mal, discord, channel, prefix, anime_source, manga_source, anime_ignored, manga_ignored)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, user)
 
         self.conn.commit()
 
@@ -85,32 +103,19 @@ class DatabaseCog(commands.Cog):
         """, (mal, discord))
         self.conn.commit()
 
-    def setChannel(self, channel):
+    def updateValue(self, key, value):
         """
-        Set the bot channel.
+        Update a key-value pair in the database.
 
-        :param channel: Name of the bot channel.
+        :param key:   The key.
+        :param value: The new value for the key.
         """
         self.cursor.execute("""
             WITH profile AS (SELECT * FROM USERS LIMIT 1)
             UPDATE USERS
-            SET channel = %s
+            SET """ + key + """ = %s
             FROM profile
-        """, (channel,))
-        self.conn.commit()
-
-    def setPrefix(self, prefix):
-        """
-        Set the prefix of the bot
-
-        :param prefix: The new prefix for the bot.
-        """
-        self.cursor.execute("""
-            WITH profile AS (SELECT * FROM USERS LIMIT 1)
-            UPDATE USERS
-            SET prefix = %s
-            FROM profile
-        """, (prefix,))
+        """, (value,))
         self.conn.commit()
 
     def getUser(self):

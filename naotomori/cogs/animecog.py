@@ -30,21 +30,36 @@ class AnimeCog(SourceCog):
         :param ctx: The context.
         :param source: Name of the anime source.
         """
+        successful = self._setAnimeSource(source)
+        if successful:
+            self.bot.get_cog('DatabaseCog').updateValue("anime_source", source)
+        if source.lower() == "none":
+            self.list.clear()
+            await ctx.send(f'Successfully removed the anime source.')
+            return
+        elif not successful:
+            await ctx.send('Unknown or unsupported anime source.')
+            return
+        self.list.clear()
+        self.fillCache()
+        await ctx.send(f'Successfully set the anime source to {source}.')
+
+    def _setAnimeSource(self, source):
+        """
+        Set the anime source, i.e. where it will retrieve the anime from.
+
+        :param source: Name of the anime source.
+        :return True if successful, False otherwise.
+        """
         if source.lower() == "gogoanime":
             self.source = gogoanime.GoGoAnime()
         elif source.lower() == "9anime":
             self.source = _9anime._9Anime()
         elif source.lower() == "none":
             self.source = None
-            self.list.clear()
-            await ctx.send(f'Successfully removed the anime source.')
-            return
         else:
-            await ctx.send('Unknown or unsupported anime source.')
-            return
-        self.list.clear()
-        self.fillCache()
-        await ctx.send(f'Successfully set the anime source to {source}.')
+            return False
+        return True
 
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):

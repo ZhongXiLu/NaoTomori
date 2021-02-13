@@ -95,3 +95,12 @@ class TestMangaCog(asynctest.TestCase):
         )
         self.assertNotEqual(self.mangaCog.cache, oldCache)
         self.assertTrue('3-gatsu no Lion' in self.mangaCog.cache)
+
+    def test_setMangaSource(self):
+        """Test setting a new manga source"""
+        self.assertTrue(self.mangaCog._setMangaSource("mangadex"))
+        self.assertEqual("MangaDex", str(self.mangaCog.source))
+        self.assertTrue(self.mangaCog._setMangaSource("none"))
+        self.assertIsNone(self.mangaCog.source)
+        self.assertFalse(self.mangaCog._setMangaSource("mangarock"))
+        self.assertFalse(self.mangaCog._setMangaSource("random source"))
