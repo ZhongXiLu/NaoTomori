@@ -19,50 +19,7 @@ Currently it supports following sources:
 
 <img src="https://i.imgur.com/xaSPIDp.png" width="800">
 
-Just set your MyAnimeList profile with the `!setProfile` command and you're good to go. For more information on the other commands, you can use `!help` or check the table below.
-
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td>setProfile</td>
-        <td>Set your MAL profile</td>
-    </tr>
-    <tr>
-        <td>removeProfile</td>
-        <td>Remove your MAL profile (you wont get pings then)</td>
-    </tr>
-    <tr>
-        <td>getProfile</td>
-        <td>Get a brief overview of your MAL profile</td>
-    </tr>
-    <tr>
-        <td>setChannel</td>
-        <td>Set the bot channel (where it will ping you)</td>
-    </tr>
-    <tr>
-        <td>setPrefix</td>
-        <td>Set the prefix of the bot</td>
-    </tr>
-    <tr>
-        <td>ping</td>
-        <td>Ping the bot</td>
-    </tr>
-    <tr>
-        <td>help</td>
-        <td>Get a list of all the commands with their description</td>
-    </tr>
-    <tr>
-        <td>setAnimeSource</td>
-        <td>Set the anime source for retrieving new anime (set source to "none" to remove the anime source)</td>
-    </tr>
-    <tr>
-        <td>setMangaSource</td>
-        <td>Set the manga source for retrieving new manga (set source to "none" to remove the manga source)</td>
-    </tr>
-</table>
+Just set your MyAnimeList profile with the `!setProfile` command and you're good to go. For more information on the other commands, you can check the [wiki page](https://github.com/ZhongXiLu/NaoTomori/wiki/Available-Commands) or use `!help` command.
 
 ## Setup
 
