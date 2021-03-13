@@ -2,7 +2,10 @@
 import copy
 import asynctest
 from asyncio import Future
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
+
+import lxml
+import requests
 from discord.ext import commands
 from lxml import html
 
@@ -32,8 +35,14 @@ class TestAnimeCog(asynctest.TestCase):
     def tearDown(self):
         self.animeCog.cache = []
 
-    def test_cacheAnime(self):
+    @patch.object(requests.Session, 'get')
+    @patch.object(lxml.html, 'fromstring')
+    def test_cacheAnime(self, html_fromstring, mock_session):
         """Test the initial caching"""
+        mock_response = requests.Response()
+        mock_response.status_code = 200
+        mock_session.return_value = mock_response
+        html_fromstring.return_value = ""
 
         self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
@@ -55,8 +64,15 @@ class TestAnimeCog(asynctest.TestCase):
             'Haikyuu!!: To the Top 2nd Season'
         ])
 
-    async def test_checkNewAnime(self):
+    @patch.object(requests.Session, 'get')
+    @patch.object(lxml.html, 'fromstring')
+    async def test_checkNewAnime(self, html_fromstring, mock_session):
         """Test checking for new animes and make sure 'pings' are sent out correctly"""
+
+        mock_response = requests.Response()
+        mock_response.status_code = 200
+        mock_session.return_value = mock_response
+        html_fromstring.return_value = ""
 
         self.animeCog.source._findAnimeElements = MagicMock(return_value=self.animes1)
         self.animeCog.fillCache()
@@ -97,8 +113,8 @@ class TestAnimeCog(asynctest.TestCase):
 
     def test_setAnimeSource(self):
         """Test setting a new anime source"""
-        self.assertTrue(self.animeCog._setAnimeSource("9anime"))
-        self.assertEqual("9anime", str(self.animeCog.source))
+        # self.assertTrue(self.animeCog._setAnimeSource("9anime"))
+        # self.assertEqual("9anime", str(self.animeCog.source))
         self.assertTrue(self.animeCog._setAnimeSource("gogoanime"))
         self.assertEqual("GoGoAnime", str(self.animeCog.source))
         self.assertTrue(self.animeCog._setAnimeSource("none"))

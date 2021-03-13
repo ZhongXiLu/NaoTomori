@@ -8,6 +8,7 @@ from naotomori.cogs.source.manga.mangarock import MangaRock
 class TestApi(unittest.TestCase):
     """Tests for the 3rd party api's"""
 
+    @unittest.skip("Cant easily scrape their website :thinking:")
     def test_9anime(self):
         """Test 9Anime api"""
 

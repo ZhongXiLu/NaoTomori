@@ -53,8 +53,8 @@ class AnimeCog(SourceCog):
         """
         if source.lower() == "gogoanime":
             self.source = gogoanime.GoGoAnime()
-        elif source.lower() == "9anime":
-            self.source = _9anime._9Anime()
+        # elif source.lower() == "9anime":
+        #     self.source = _9anime._9Anime()
         elif source.lower() == "none":
             self.source = None
         else:

@@ -7,13 +7,9 @@ Basic [Discord](https://discordapp.com/) bot that pings you when a new anime epi
 
 This is just a personal bot, meaning it only serves one user at a time, so feel free to use it for yourself.
 
-Currently it supports following sources:
-- Anime:
-    - [GoGoAnime](https://www4.gogoanime.io/) (default)
-    - [9anime](https://www1.9anime.nl/home) (does not work on [Heroku](https://www.heroku.com/))
-- Manga:
-    - [MangaDex](https://mangadex.org/) (default)
-    - ~~[MangaRock](https://mangarock.com/)~~ (F for MangaRock 😭)
+Currently it uses following sites:
+- [GoGoAnime](https://www4.gogoanime.io/) for anime
+- [MangaDex](https://mangadex.org/) for manga
 
 ## Usage
 
