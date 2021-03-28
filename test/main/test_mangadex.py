@@ -14,7 +14,7 @@ class TestMangaDex(unittest.TestCase):
     def test_findMangaElements(self):
         """Test getting the manga html elements from a given MangaDex html file"""
 
-        with open('test/test_data/mangadex.html') as file:
+        with open('test/main/test_data/mangadex.html') as file:
             tree = html.fromstring(file.read())
             mangas = self.mangadex._findMangaElements(tree)
             self.assertEqual(len(mangas), 42)
@@ -38,7 +38,7 @@ class TestMangaDex(unittest.TestCase):
     def test_getRecentManga(self):
         """Test getting the most recent manga from the MangaDex homepage"""
 
-        with open('test/test_data/mangadex.html') as file:
+        with open('test/main/test_data/mangadex.html') as file:
             tree = html.fromstring(file.read())
             mangas = self.mangadex._findMangaElements(tree)
             self.mangadex._findMangaElements = MagicMock(return_value=mangas)

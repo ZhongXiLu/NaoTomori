@@ -14,7 +14,7 @@ class Test9Anime(unittest.TestCase):
 
     def setUp(self):
         self._9anime = _9Anime()
-        with open('test/test_data/9anime_2.html') as file:
+        with open('test/main/test_data/9anime_2.html') as file:
             tree = html.fromstring(file.read())
             self.animes = self._9anime._findAnimeElements(tree)
 

@@ -22,10 +22,10 @@ class TestMangaCog(asynctest.TestCase):
         cls.mangaCog.source = MangaRock()
         cls.bot.add_cog(cls.mangaCog)
 
-        with open('test/test_data/mangarock_1.html') as file:
+        with open('test/main/test_data/mangarock_1.html') as file:
             tree = html.fromstring(file.read())
             cls.mangas1 = cls.mangaCog.source._findMangaElements(tree)
-        with open('test/test_data/mangarock_2.html') as file:
+        with open('test/main/test_data/mangarock_2.html') as file:
             tree = html.fromstring(file.read())
             cls.mangas2 = cls.mangaCog.source._findMangaElements(tree)
 
