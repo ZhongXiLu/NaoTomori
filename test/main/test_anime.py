@@ -25,10 +25,10 @@ class TestAnimeCog(asynctest.TestCase):
         cls.animeCog.source = _9anime._9Anime()
         cls.bot.add_cog(cls.animeCog)
 
-        with open('test/test_data/9anime_1.html') as file:
+        with open('test/main/test_data/9anime_1.html') as file:
             tree = html.fromstring(file.read())
             cls.animes1 = cls.animeCog.source._findAnimeElements(tree)
-        with open('test/test_data/9anime_2.html') as file:
+        with open('test/main/test_data/9anime_2.html') as file:
             tree = html.fromstring(file.read())
             cls.animes2 = cls.animeCog.source._findAnimeElements(tree)
 

@@ -27,6 +27,6 @@ jobs:
     - name: Install coverage package
       run: pip install coverage
     - name: Run Unit Tests
-      run: coverage run -m unittest -v
+      run: coverage run -m unittest discover -v -s test/main/
     - name: Upload reports to Codecov
       run: bash <(curl -s https://codecov.io/bash)

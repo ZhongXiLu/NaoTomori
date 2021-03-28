@@ -15,7 +15,7 @@ class TestGoGoAnime(unittest.TestCase):
     def test_findAnimeElements(self):
         """Test getting the anime html elements from a given GoGoAnime html file"""
 
-        with open('test/test_data/gogoanime.html') as file:
+        with open('test/main/test_data/gogoanime.html') as file:
             tree = html.fromstring(file.read())
             animes = self.gogoanime._findAnimeElements(tree)
             self.assertEqual(len(animes), 20)
@@ -40,7 +40,7 @@ class TestGoGoAnime(unittest.TestCase):
     def test_getRecentAnime(self):
         """Test getting the most recent anime from the GoGoAnime homepage"""
 
-        with open('test/test_data/gogoanime.html') as file:
+        with open('test/main/test_data/gogoanime.html') as file:
             tree = html.fromstring(file.read())
             animes = self.gogoanime._findAnimeElements(tree)
             self.gogoanime._findAnimeElements = MagicMock(return_value=animes)
