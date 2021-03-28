@@ -8,7 +8,7 @@ discord==1.0.1
 discord.py==1.6.0
 idna==2.8
 jikanpy==4.2.2
-lxml==4.6.2
+lxml==4.6.3
 multidict==4.5.2
 psycopg2-binary==2.8.2
 requests==2.22.0
