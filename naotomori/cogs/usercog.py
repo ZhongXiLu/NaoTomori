@@ -179,7 +179,7 @@ class UserCog(commands.Cog):
         self.discordUser = ctx.author
         if self.channel is None:
             self.channel = ctx.channel
-            self.bot.get_cog('DatabaseCog').setChannel(str(self.channel))
+            self.bot.get_cog('DatabaseCog').updateValue("channel", str(self.channel))
 
         # Store data in database
         self.bot.get_cog('DatabaseCog').setProfile(profile, str(self.discordUser))

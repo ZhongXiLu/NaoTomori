@@ -33,7 +33,6 @@ class DatabaseCog(commands.Cog):
         """
         Start the DatabaseCog: creates the table if it didn't exist already.
         """
-
         # Get old user if there is one
         user = self.getUser()
         if not user:
@@ -44,7 +43,7 @@ class DatabaseCog(commands.Cog):
 
         # Recreate db
         self.cursor.execute("""
-            DROP TABLE USERS CASCADE;
+            DROP TABLE IF EXISTS USERS CASCADE;
         """)
         self.cursor.execute("""
             CREATE TABLE USERS (
@@ -124,8 +123,12 @@ class DatabaseCog(commands.Cog):
 
         :return: Dictionary of the current user, if none exists, return None.
         """
-        self.cursor.execute("""
-            SELECT * FROM USERS LIMIT 1;
-        """)
-        self.conn.commit()
-        return self.cursor.fetchone()
+        try:
+            self.cursor.execute("""
+                SELECT * FROM USERS LIMIT 1;
+            """)
+            self.conn.commit()
+            return self.cursor.fetchone()
+        except:
+            self.conn.rollback()
+            return None
