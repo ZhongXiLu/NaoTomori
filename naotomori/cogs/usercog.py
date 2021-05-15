@@ -46,13 +46,13 @@ class UserCog(commands.Cog):
             - retrieves the user from the database, if possible
             - start the updateMalProfileLoop
         """
-        mal, discord, channel, prefix, anime_source, manga_source, anime_ignored, manga_ignored = self.bot.get_cog('DatabaseCog').getUser()
+        mal, discordMention, channel, prefix, anime_source, manga_source, anime_ignored, manga_ignored = self.bot.get_cog('DatabaseCog').getUser()
         if mal != '':
             try:
                 self.malUser = self._getMALProfile(mal)
             except jikanpy.exceptions.APIException:
                 pass
-            self.discordUser = self._getMember(discord)
+            self.discordUser = discordMention
         if channel != '':
             self.channel = self._getChannel(channel)
         if prefix != '':
@@ -176,13 +176,13 @@ class UserCog(commands.Cog):
         self.progress = io.StringIO("⌛ Please wait a bit")  # start new profile
         self.bot.get_cog('AnimeCog').list = []
         self.bot.get_cog('MangaCog').list = []
-        self.discordUser = ctx.author
+        self.discordUser = str(ctx.author.mention)
         if self.channel is None:
             self.channel = ctx.channel
             self.bot.get_cog('DatabaseCog').updateValue("channel", str(self.channel))
 
         # Store data in database
-        self.bot.get_cog('DatabaseCog').setProfile(profile, str(self.discordUser))
+        self.bot.get_cog('DatabaseCog').setProfile(profile, self.discordUser)
 
         thread = Thread(target=self._updateMALProfile, args=(profile,))
         thread.start()

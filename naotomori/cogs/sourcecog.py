@@ -54,8 +54,11 @@ class SourceCog(commands.Cog):
         embed = discord.Embed(title=title, description=progress, url=link, color=discord.Color.green())
         embed.set_thumbnail(url=image)
         discordUser = self.bot.get_cog('UserCog').discordUser
-        if discordUser:
-            await self.bot.get_cog('UserCog').channel.send(discordUser.mention, embed=embed)
+        if discordUser.startswith("<@"):
+            await self.bot.get_cog('UserCog').channel.send(discordUser, embed=embed)
+        else:
+            await self.bot.get_cog('UserCog').channel.send("Please set your profile again using !setProfile",
+                                                           embed=embed)
 
     async def ignore(self, ctx, is_anime, *args):
         """
