@@ -1,8 +1,10 @@
-
+import logging
 import requests
 from lxml import html
 
 from naotomori.cogs.source.source import Source
+
+logger = logging.getLogger('NaoTomori')
 
 
 class MangaDex:
@@ -52,6 +54,8 @@ class MangaDex:
             if response.status_code == 200:
                 tree = html.fromstring(response.text)
                 mangaElements = self._findMangaElements(tree)
+            else:
+                logger.error(f"Received {response.status_code} from {str(self)}")
 
         # Construct the Manga objects
         for mangaElement in mangaElements:

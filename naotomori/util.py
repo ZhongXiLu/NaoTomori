@@ -1,6 +1,9 @@
+import logging
 import time
 
 from jikanpy import jikan
+
+logger = logging.getLogger('NaoTomori')
 
 
 def jikanCall(func, **args):
@@ -15,7 +18,8 @@ def jikanCall(func, **args):
             return func(**args)
         except jikan.APIException as e:
             if e.status_code == 503:
-                print(str(e))
+                logger.warning(f"Sending requests too fast (503): {str(e)}")
                 pass    # woops, we might have sent that request too fast, try again
             else:
+                logger.error(f"Error sending request to MAL using Jikan: {str(e)}")
                 raise e

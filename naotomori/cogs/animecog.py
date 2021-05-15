@@ -1,7 +1,11 @@
+import logging
+
 from discord.ext import tasks, commands
 
 from naotomori.cogs.source.anime import _9anime, gogoanime
 from naotomori.cogs.sourcecog import SourceCog
+
+logger = logging.getLogger('NaoTomori')
 
 
 class AnimeCog(SourceCog):
@@ -15,10 +19,12 @@ class AnimeCog(SourceCog):
 
         :param bot: The Discord bot.
         """
+        logger.info("Initializing AnimeCog")
         super().__init__(bot)
 
         # Replace this with your own 'Anime API' if you want to use a different anime source
         # self.source = _9anime._9Anime()
+        logger.info("Setting GoGoAnime as anime source")
         self.source = gogoanime.GoGoAnime()
 
     @commands.command(
@@ -30,18 +36,22 @@ class AnimeCog(SourceCog):
         :param ctx: The context.
         :param source: Name of the anime source.
         """
+        logger.info("Receiving setAnimeSource command")
         successful = self._setAnimeSource(source)
         if successful:
             self.bot.get_cog('DatabaseCog').updateValue("anime_source", source)
         if source.lower() == "none":
             self.list.clear()
+            logger.info('Successfully removed the anime source')
             await ctx.send(f'Successfully removed the anime source.')
             return
         elif not successful:
+            logger.error('Unknown or unsupported anime source')
             await ctx.send('Unknown or unsupported anime source.')
             return
         self.list.clear()
         self.fillCache()
+        logger.info(f'Successfully set the anime source to {source}')
         await ctx.send(f'Successfully set the anime source to {source}.')
 
     def _setAnimeSource(self, source):
@@ -69,6 +79,7 @@ class AnimeCog(SourceCog):
         :param ctx: The context.
         :param args: Name of the anime.
         """
+        logger.info("Receiving ignoreAnime command")
         await super(AnimeCog, self).ignore(ctx, True, *args)
 
     @commands.command(brief='Unignore an anime')
@@ -79,6 +90,7 @@ class AnimeCog(SourceCog):
         :param ctx: The context.
         :param args: Name of the anime.
         """
+        logger.info("Receiving unignoreAnime command")
         await super(AnimeCog, self).unignore(ctx, True, *args)
 
     @tasks.loop(minutes=5)

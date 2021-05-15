@@ -1,8 +1,10 @@
-
+import logging
 import requests
 from lxml import html
 
 from naotomori.cogs.source.source import Source
+
+logger = logging.getLogger('NaoTomori')
 
 
 class GoGoAnime:
@@ -50,6 +52,8 @@ class GoGoAnime:
                 tree = html.fromstring(response.text)
                 # Get all the recent anime's
                 animeElements = self._findAnimeElements(tree)
+            else:
+                logger.error(f"Received {response.status_code} from {str(self)}")
 
         # Construct the Anime objects
         for animeElement in animeElements:

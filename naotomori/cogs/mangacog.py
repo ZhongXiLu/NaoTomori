@@ -1,7 +1,11 @@
+import logging
+
 from discord.ext import tasks, commands
 
 from naotomori.cogs.source.manga.mangadex import MangaDex
 from naotomori.cogs.sourcecog import SourceCog
+
+logger = logging.getLogger('NaoTomori')
 
 
 class MangaCog(SourceCog):
@@ -15,9 +19,11 @@ class MangaCog(SourceCog):
 
         :param bot: The Discord bot.
         """
+        logger.info("Initializing MangaCog")
         super().__init__(bot)
 
         # Replace this with your own 'Manga API' if you want to use a different manga source
+        logger.info("Setting MangaDex as manga source")
         self.source = MangaDex()
 
     @commands.command(
@@ -29,22 +35,27 @@ class MangaCog(SourceCog):
         :param ctx: The context.
         :param source: Name of the manga source.
         """
+        logger.info("Receiving setMangaSource command")
         successful = self._setMangaSource(source)
         if successful:
             self.bot.get_cog('DatabaseCog').updateValue("manga_source", source)
         if source.lower() == "mangarock":
+            logger.warning('Cannot use MangaRock as manga source')
             await ctx.send(
                 'Unfortunately MangaRock has removed all their reading features. Please use a different source.')
             return
         elif source.lower() == "none":
             self.list.clear()
+            logger.info('Successfully removed the manga source')
             await ctx.send(f'Successfully removed the manga source.')
             return
         elif not successful:
+            logger.error('Unknown or unsupported manga source')
             await ctx.send('Unknown or unsupported manga source.')
             return
         self.list.clear()
         self.fillCache()
+        logger.info(f'Successfully set the manga source to {source}')
         await ctx.send(f'Successfully set the manga source to {source}.')
 
     def _setMangaSource(self, source):
@@ -70,6 +81,7 @@ class MangaCog(SourceCog):
         :param ctx: The context.
         :param args: Name of the manga.
         """
+        logger.info("Receiving ignoreManga command")
         await super(MangaCog, self).ignore(ctx, False, *args)
 
     @commands.command(brief='Unignore a manga')
@@ -80,6 +92,7 @@ class MangaCog(SourceCog):
         :param ctx: The context.
         :param args: Name of the manga.
         """
+        logger.info("Receiving unignoreManga command")
         await super(MangaCog, self).unignore(ctx, False, *args)
 
     @tasks.loop(minutes=5)

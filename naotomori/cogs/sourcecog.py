@@ -1,6 +1,10 @@
+import logging
+
 import discord
 from discord.ext import tasks, commands
 from collections import deque
+
+logger = logging.getLogger('NaoTomori')
 
 
 class SourceCog(commands.Cog):
@@ -16,6 +20,7 @@ class SourceCog(commands.Cog):
 
         :param bot: The Discord bot.
         """
+        logger.info("Initializing SourceCog")
         self.bot = bot
         self.list = []  # currently watching/reading list
         self.ignore = set()  # titles to ignore
@@ -28,8 +33,10 @@ class SourceCog(commands.Cog):
             - fill the cache
             - start the checkNewLoop
         """
+        logger.info("Starting SourceCog")
         self.fillCache()
         if not self.checkNewLoop.is_running():
+            logger.info("Initializing checkNewLoop")
             self.checkNewLoop.start()
 
     def fillCache(self):
@@ -39,8 +46,11 @@ class SourceCog(commands.Cog):
         if self.source:
             items = self.source.getRecent()
             items.reverse()  # make sure the most recent ones are added last to the cache
+            logger.info(f"Filling cache with {len(items)} items")
             for item in items:
                 self.cache.append(item.title)
+        else:
+            logger.error("Cannot fill cache, source is not set")
 
     async def sendPing(self, title, progress, link, image):
         """
@@ -51,12 +61,14 @@ class SourceCog(commands.Cog):
         :param link: Link to the anime/manga.
         :param image: Link of a thumbnail of the anime/manga.
         """
+        logger.info(f"Sending ping to user: title={title}, progress={progress}")
         embed = discord.Embed(title=title, description=progress, url=link, color=discord.Color.green())
         embed.set_thumbnail(url=image)
         discordUser = self.bot.get_cog('UserCog').discordUser
         if discordUser.startswith("<@"):
             await self.bot.get_cog('UserCog').channel.send(discordUser, embed=embed)
         else:
+            logger.warning("Discord user is not set")
             await self.bot.get_cog('UserCog').channel.send("Please set your profile again using !setProfile",
                                                            embed=embed)
 
@@ -74,8 +86,10 @@ class SourceCog(commands.Cog):
                 mal_id = itemList['mal_id']
                 self.ignore.add(mal_id)
                 self._update_ignore_list(is_anime)
+                logger.info(f'Successfully ignored "{itemList["title"]}"')
                 await ctx.send(f'Successfully ignored "{itemList["title"]}".')
                 return
+        logger.error(f'Could not find "{" ".join(args[:])}" in users lists')
         await ctx.send(f'Could not find "{" ".join(args[:])}" in your MAL lists.')
 
     async def unignore(self, ctx, is_anime, *args):
@@ -93,8 +107,10 @@ class SourceCog(commands.Cog):
                 if mal_id in self.ignore:
                     self.ignore.remove(mal_id)
                     self._update_ignore_list(is_anime)
+                    logger.info(f'Successfully unignored "{itemList["title"]}"')
                     await ctx.send(f'Successfully unignored "{itemList["title"]}".')
                     return
+        logger.error(f'Could not find "{" ".join(args[:])}" in users lists')
         await ctx.send(f'Could not find "{" ".join(args[:])}" in your MAL lists.')
 
     def _update_ignore_list(self, is_anime):
@@ -104,8 +120,10 @@ class SourceCog(commands.Cog):
         :param is_anime: Whether to update the anime or manga ignore list.
         """
         if is_anime:
+            logger.info("Updating anime ignore list")
             self.bot.get_cog('DatabaseCog').updateValue("anime_ignored", repr(self.ignore))
         else:
+            logger.info("Updating manga ignore list")
             self.bot.get_cog('DatabaseCog').updateValue("manga_ignored", repr(self.ignore))
 
     async def checkNew(self):
@@ -119,14 +137,16 @@ class SourceCog(commands.Cog):
             if items:
                 for item in items:
                     if item.title not in self.cache:
-                        print(f'{str(self.source)}: {item.title}')
+                        logger.info(f'New entry from {str(self.source)}: {item.title}')
                         self.cache.append(item.title)
                         for itemList in self.list:
                             if item.title == itemList['title'] or item.title == itemList['title_english']:
                                 if itemList['mal_id'] not in self.ignore:
                                     await self.sendPing(item.title, item.progress, item.link, itemList['image_url'])
             else:
-                print(f'Failed retrieving from {str(self.source)}')
+                logger.error(f'Failed retrieving from {str(self.source)}')
+        else:
+            logger.error("Cannot check for new entries, source is not set")
 
     @tasks.loop(minutes=5)
     async def checkNewLoop(self):
