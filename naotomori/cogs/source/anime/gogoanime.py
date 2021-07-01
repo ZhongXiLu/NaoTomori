@@ -16,7 +16,7 @@ class GoGoAnime:
         """
         Constructor.
         """
-        self.url = 'https://gogoanime.so/'
+        self.url = 'https://gogoanime.pe/'
 
     def __str__(self):
         """
