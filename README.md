@@ -1,21 +1,35 @@
-# Nao Tomori
-[![](https://github.com/ZhongXiLu/NaoTomori/workflows/Python%20CI/badge.svg)](https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22Python+CI%22)
-[![](https://github.com/ZhongXiLu/NaoTomori/workflows/API%20CI/badge.svg)](https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22API+CI%22)
-[![codecov](https://codecov.io/gh/ZhongXiLu/NaoTomori/branch/master/graph/badge.svg)](https://codecov.io/gh/ZhongXiLu/NaoTomori)
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/25816683/125201399-49a92080-e26f-11eb-87b7-6c8fdaed6921.png" width="25%" alt="Nao Tomori"/>
+</p>
+
+<h1 align="center">Nao Tomori</h1>
+
+<p align="center">
+  <a href="https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22Python+CI%22">
+    <img src="https://github.com/ZhongXiLu/NaoTomori/workflows/Python%20CI/badge.svg" alt="Python CI Badge">
+  </a>
+  <a href="https://github.com/ZhongXiLu/NaoTomori/actions?query=workflow%3A%22API+CI%22">
+    <img src="https://github.com/ZhongXiLu/NaoTomori/workflows/API%20CI/badge.svg" alt="API CI Badge">
+  </a>
+  <a href="https://codecov.io/gh/ZhongXiLu/NaoTomori">
+    <img src="https://codecov.io/gh/ZhongXiLu/NaoTomori/branch/master/graph/badge.svg" alt="Codecov Badge">
+  </a>
+</p>
 
 Basic [Discord](https://discordapp.com/) bot that pings you when a new anime episode or manga chapter is released, based on your [MyAnimeList](https://myanimelist.net/) account. I couldn't find any bot that does this, so I wrote one myself.
 
 This is just a personal bot, meaning it only serves one user at a time, so feel free to use it for yourself.
 
 Currently it uses following sites:
-- [GoGoAnime](https://www4.gogoanime.io/) for anime
+- [GoGoAnime](https://gogoanime.pe/) for anime
 - [MangaDex](https://mangadex.org/) for manga
 
 ## Usage
 
 <img src="https://i.imgur.com/xaSPIDp.png" width="800">
 
-Just set your MyAnimeList profile with the `!setProfile` command and you're good to go. For more information on the other commands, you can check the [wiki page](https://github.com/ZhongXiLu/NaoTomori/wiki/Available-Commands) or use `!help` command.
+Just set your MyAnimeList profile with the `!setProfile` command and you're good to go. For more information on the other commands, you can check the [wiki page](https://github.com/ZhongXiLu/NaoTomori/wiki/Available-Commands) or use the `!help` command.
 
 ## Setup
 
