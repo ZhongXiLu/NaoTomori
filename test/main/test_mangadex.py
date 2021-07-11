@@ -1,8 +1,20 @@
 import unittest
-from unittest.mock import MagicMock
-from lxml import html
+from dataclasses import dataclass
+from unittest.mock import patch
+
+from requests import Session
 
 from naotomori.cogs.source.manga.mangadex import MangaDex
+
+
+@dataclass
+class Response:
+    """
+    Source: dataclass to store information for an anime/manga.
+    """
+
+    status_code: int
+    text: str
 
 
 class TestMangaDex(unittest.TestCase):
@@ -11,91 +23,65 @@ class TestMangaDex(unittest.TestCase):
     def setUp(self):
         self.mangadex = MangaDex()
 
-    def test_findMangaElements(self):
-        """Test getting the manga html elements from a given MangaDex html file"""
+    def mock_response(self, url):
+        if url.startswith("https://api.mangadex.org/chapter"):
+            with open('test/main/test_data/mangadex_chapter.json') as file:
+                return Response(200, file.read())
+        elif url.startswith("https://api.mangadex.org/manga"):
+            with open('test/main/test_data/mangadex_manga.json') as file:
+                return Response(200, file.read())
+        else:
+            return Response(400, "{}")
 
-        with open('test/main/test_data/mangadex.html') as file:
-            tree = html.fromstring(file.read())
-            mangas = self.mangadex._findMangaElements(tree)
-            self.assertEqual(len(mangas), 42)
-            titles = []
-            for manga in mangas:
-                title = manga.xpath(".//a[contains(concat(' ', normalize-space(@class), ' '), ' manga_title ')]")[0]
-                titles.append(title.text_content())
-            self.assertEqual(titles[:10], [
-                'Hana wa Junai ni Junjiru',
-                'trash.',
-                'Paradise Baby',
-                'Kumo Desu ga, Nani ka? Daily Life of the Four Spider Sisters',
-                'Kannou Shousetsuka no Neko',
-                'Persona 5 Mementos Mission',
-                'Metropolitan System',
-                'Ouji Hiroimashita',
-                'Honoo no Suna',
-                'Enslave Lover'
-            ])
-
+    @patch.object(Session, 'get', mock_response)
     def test_getRecentManga(self):
         """Test getting the most recent manga from the MangaDex homepage"""
 
-        with open('test/main/test_data/mangadex.html') as file:
-            tree = html.fromstring(file.read())
-            mangas = self.mangadex._findMangaElements(tree)
-            self.mangadex._findMangaElements = MagicMock(return_value=mangas)
-
         recentManga = self.mangadex.getRecent()
         self.assertEqual(len(recentManga), 16)
-        self.assertEqual([manga.title for manga in recentManga], [
-            'Hana wa Junai ni Junjiru',
-            'trash.',
-            'Paradise Baby',
-            'Kumo Desu ga, Nani ka? Daily Life of the Four Spider Sisters',
-            'Kannou Shousetsuka no Neko',
-            'Persona 5 Mementos Mission',
-            'Metropolitan System',
-            'Ouji Hiroimashita',
-            'Honoo no Suna',
-            'Enslave Lover',
-            '2D Partner',
-            'Nessa no Kusari',
-            'Bliss~End Of Gods',
-            'Shikanoko Nokonoko Koshitantan',
-            'Koi no Myouyaku',
-            'Sawatte, Tokashite'
+        self.assertEqual([anime.title for anime in recentManga], [
+            'Eko Eko Azaraku: Reborn',
+            'Rivnes',
+            'Young Black Jack',
+            'The Princess is Evil',
+            'Fate/Grand Order - Daily Chaldea (Doujinshi)',
+            'Orenchi ni Kita Onna Kishi to Inakagurashi Surukotoninatta Ken',
+            'I Met the Male Lead in Prison',
+            'Badass',
+            'Hawkwood',
+            'Lovetrap Island - Passion in Distant Lands -',
+
+            # Note that there are multiple chapters released at once for the same manga
+            'Saki',
+            'Saki',
+            'Saki',
+            'Saki',
+
+            "My Life as Inukai-san's Dog",
+            "I'm a former slave, but I tried to buy an oni slave who I later found to "
+            'have too much energy so I want to throw him away...'
         ])
-        self.assertEqual([manga.progress for manga in recentManga], [
-            'Vol. 1 Chapter 9.5',
-            'Vol. 7 Chapter 51',
-            'Vol. 1 Chapter 7.5',
-            'Chapter 46',
-            'Vol. 1 Chapter 2',
-            'Vol. 1 Chapter 4.5',
-            'Chapter 323',
-            'Vol. 1 Chapter 7.5',
-            'Vol. 1 Chapter 6.5',
-            'Vol. 1 Chapter 7.5',
-            'Chapter 16',
-            'Vol. 1 Chapter 6.6',
-            'Chapter 2',
-            'Chapter 2',
-            'Vol. 1 Chapter 4',
-            'Vol. 1 Chapter 6.5'
+        self.assertEqual([anime.progress for anime in recentManga[:10]], [
+            'Chapter 13',
+            'Chapter 19.5',
+            'Chapter 17',
+            'Chapter 23',
+            'Chapter 804',
+            'Chapter 59',
+            'Chapter 20',
+            'Chapter 7',
+            'Chapter 45',
+            'Chapter 8'
         ])
-        self.assertEqual([manga.link for manga in recentManga], [
-            'https://mangadex.org/chapter/1002666',
-            'https://mangadex.org/chapter/1002657',
-            'https://mangadex.org/chapter/1002656',
-            'https://mangadex.org/chapter/1002650',
-            'https://mangadex.org/chapter/1002644',
-            'https://mangadex.org/chapter/1002636',
-            'https://mangadex.org/chapter/1002635',
-            'https://mangadex.org/chapter/1002634',
-            'https://mangadex.org/chapter/1002624',
-            'https://mangadex.org/chapter/1002612',
-            'https://mangadex.org/chapter/1002608',
-            'https://mangadex.org/chapter/1002601',
-            'https://mangadex.org/chapter/1002586',
-            'https://mangadex.org/chapter/1002583',
-            'https://mangadex.org/chapter/1002576',
-            'https://mangadex.org/chapter/1002572'
+        self.assertEqual([anime.link for anime in recentManga[:10]], [
+            'https://mangadex.org/chapter/42afb8c9-58bb-4fa3-8459-087a542c9770',
+            'https://mangadex.org/chapter/a1165340-ecf0-4f39-96d0-589baa887ee5',
+            'https://mangadex.org/chapter/fce3e504-4490-4f56-bfbb-be2ab6f1b16c',
+            'https://mangadex.org/chapter/181dd654-e4c9-4f72-a9a6-1df9a37ccd3e',
+            'https://mangadex.org/chapter/ecb8f061-0129-4fb6-b17a-eb87e3dd6a97',
+            'https://mangadex.org/chapter/df133fee-3925-4f3b-89f8-4c5f087b655a',
+            'https://mangadex.org/chapter/64c26ed4-d851-4fef-a576-09dc76ff2e49',
+            'https://mangadex.org/chapter/0075acdf-06de-4fdc-a116-c3c8308b66ce',
+            'https://mangadex.org/chapter/7a258eae-47c6-4fd2-b052-bf34d2143d57',
+            'https://mangadex.org/chapter/47f12443-d711-4f28-9c11-9629bd31fb36'
         ])
