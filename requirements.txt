@@ -5,7 +5,7 @@ attrs==19.3.0
 certifi==2019.11.28
 chardet==3.0.4
 discord==1.0.1
-discord.py==1.6.0
+discord.py==1.7.3
 idna==2.8
 jikanpy==4.2.2
 lxml==4.6.3
