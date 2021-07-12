@@ -10,7 +10,7 @@ idna==2.8
 jikanpy==4.2.2
 lxml==4.6.3
 multidict==5.1.0
-psycopg2-binary==2.8.2
+psycopg2-binary==2.9.1
 requests==2.25.1
 timeago==1.0.14
 tqdm==4.61.2
