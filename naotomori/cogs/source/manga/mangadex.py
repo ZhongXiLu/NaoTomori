@@ -43,7 +43,13 @@ class MangaDex:
         # Get the manga id and populate the source map + get the progress (chapter number)
         for chapter in chapters:
             chapter_id = chapter["data"]["id"]
-            progress = "Chapter " + chapter["data"]["attributes"]["chapter"]
+            progress = None
+            if chapter["data"]["attributes"]["chapter"]:
+                progress = "Chapter " + chapter["data"]["attributes"]["chapter"]
+            elif chapter["data"]["attributes"]["volume"]:
+                progress = "Volume " + chapter["data"]["attributes"]["volume"]
+            else:
+                progress = "Oneshot"
             for relationship in chapter["relationships"]:
                 if relationship["type"] == "manga":
                     manga_id = relationship["id"]
