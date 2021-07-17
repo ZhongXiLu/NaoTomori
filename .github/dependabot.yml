@@ -7,3 +7,4 @@ updates:
     target-branch: "dev"
     labels:
       - "pip dependencies"
+    open-pull-requests-limit: 0   # disable for now
