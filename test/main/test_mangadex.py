@@ -40,48 +40,44 @@ class TestMangaDex(unittest.TestCase):
         recentManga = self.mangadex.getRecent()
         self.assertEqual(len(recentManga), 16)
         self.assertEqual([anime.title for anime in recentManga], [
-            'Eko Eko Azaraku: Reborn',
-            'Rivnes',
-            'Young Black Jack',
-            'The Princess is Evil',
-            'Fate/Grand Order - Daily Chaldea (Doujinshi)',
-            'Orenchi ni Kita Onna Kishi to Inakagurashi Surukotoninatta Ken',
-            'I Met the Male Lead in Prison',
-            'Badass',
-            'Hawkwood',
-            'Lovetrap Island - Passion in Distant Lands -',
-
-            # Note that there are multiple chapters released at once for the same manga
-            'Saki',
-            'Saki',
-            'Saki',
-            'Saki',
-
-            "My Life as Inukai-san's Dog",
-            "I'm a former slave, but I tried to buy an oni slave who I later found to "
-            'have too much energy so I want to throw him away...'
+            'CHR-47',
+            'CHR-47',
+            'CHR-47',
+            'Affairs of the Enchanting Doctor',
+            'Affairs of the Enchanting Doctor',
+            'Affairs of the Enchanting Doctor',
+            'The Disappearing Classroom',
+            'The Disappearing Classroom',
+            'The Disappearing Classroom',
+            'Marriage in a Heartbeat',
+            'Marriage in a Heartbeat',
+            'Marriage in a Heartbeat',
+            'Don’t Get Me Wrong, I’m The Real Victim!',
+            'Don’t Get Me Wrong, I’m The Real Victim!',
+            'Don’t Get Me Wrong, I’m The Real Victim!',
+            'This Contract Romance Must Not Turn Real!'
         ])
         self.assertEqual([anime.progress for anime in recentManga[:10]], [
-            'Chapter 13',
-            'Chapter 19.5',
-            'Chapter 17',
-            'Chapter 23',
-            'Chapter 804',
-            'Chapter 59',
-            'Chapter 20',
             'Chapter 7',
-            'Chapter 45',
-            'Chapter 8'
+            'Chapter 8',
+            'Chapter 9',
+            'Chapter 23',
+            'Chapter 24',
+            'Chapter 25',
+            'Chapter 23.1',
+            'Chapter 24.2',
+            'Chapter 24.1',
+            'Chapter 30.1'
         ])
         self.assertEqual([anime.link for anime in recentManga[:10]], [
-            'https://mangadex.org/chapter/42afb8c9-58bb-4fa3-8459-087a542c9770',
-            'https://mangadex.org/chapter/a1165340-ecf0-4f39-96d0-589baa887ee5',
-            'https://mangadex.org/chapter/fce3e504-4490-4f56-bfbb-be2ab6f1b16c',
-            'https://mangadex.org/chapter/181dd654-e4c9-4f72-a9a6-1df9a37ccd3e',
-            'https://mangadex.org/chapter/ecb8f061-0129-4fb6-b17a-eb87e3dd6a97',
-            'https://mangadex.org/chapter/df133fee-3925-4f3b-89f8-4c5f087b655a',
-            'https://mangadex.org/chapter/64c26ed4-d851-4fef-a576-09dc76ff2e49',
-            'https://mangadex.org/chapter/0075acdf-06de-4fdc-a116-c3c8308b66ce',
-            'https://mangadex.org/chapter/7a258eae-47c6-4fd2-b052-bf34d2143d57',
-            'https://mangadex.org/chapter/47f12443-d711-4f28-9c11-9629bd31fb36'
+            'https://mangadex.org/chapter/18ed7d22-d189-4f54-8344-d3891acd54ce',
+            'https://mangadex.org/chapter/c04cb411-df37-4f60-817d-606556b91077',
+            'https://mangadex.org/chapter/003701a4-5462-4f6f-a811-e2924cd9d31c',
+            'https://mangadex.org/chapter/63b19198-a3b9-4f99-b03b-358347b1ef53',
+            'https://mangadex.org/chapter/200a6fc5-a734-4f56-b779-c202acaf5cc2',
+            'https://mangadex.org/chapter/c2c487a6-b5c9-4f4a-9edc-a2b03a3959ff',
+            'https://mangadex.org/chapter/9f10a60b-5099-4fef-ae6d-c32991810db9',
+            'https://mangadex.org/chapter/6c903e07-651d-4f3f-8a93-4685eb030818',
+            'https://mangadex.org/chapter/1a95ef04-253e-4f17-9018-45fada6005eb',
+            'https://mangadex.org/chapter/b43bc657-d23f-4f98-9c4a-16ef742f4d6c'
         ])

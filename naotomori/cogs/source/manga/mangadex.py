@@ -42,12 +42,12 @@ class MangaDex:
 
         # Get the manga id and populate the source map + get the progress (chapter number)
         for chapter in chapters:
-            chapter_id = chapter["data"]["id"]
+            chapter_id = chapter["id"]
             progress = None
-            if chapter["data"]["attributes"]["chapter"]:
-                progress = "Chapter " + chapter["data"]["attributes"]["chapter"]
-            elif chapter["data"]["attributes"]["volume"]:
-                progress = "Volume " + chapter["data"]["attributes"]["volume"]
+            if chapter["attributes"]["chapter"]:
+                progress = "Chapter " + chapter["attributes"]["chapter"]
+            elif chapter["attributes"]["volume"]:
+                progress = "Volume " + chapter["attributes"]["volume"]
             else:
                 progress = "Oneshot"
             for relationship in chapter["relationships"]:
@@ -69,10 +69,10 @@ class MangaDex:
         with requests.Session() as session:
             response = session.get(manga_url_with_params)
             if response.status_code == 200:
-                mangas = json.loads(response.text)["results"]
+                mangas = json.loads(response.text)["data"]
                 for manga in mangas:
-                    manga_id = manga["data"]["id"]
-                    title = manga["data"]["attributes"]["title"]["en"]
+                    manga_id = manga["id"]
+                    title = manga["attributes"]["title"]["en"]
                     new_sources = []
                     sources = source_map[manga_id]
                     for source in sources:
@@ -96,7 +96,7 @@ class MangaDex:
         with requests.Session() as session:
             response = session.get(self.chapter_api)
             if response.status_code == 200:
-                chapters = json.loads(response.text)["results"]
+                chapters = json.loads(response.text)["data"]
                 return self._chaptersToSourceObjects(chapters)[:16]     # should be <= 16
             else:
                 logger.error(f"Received {response.status_code} from {str(self)}")
