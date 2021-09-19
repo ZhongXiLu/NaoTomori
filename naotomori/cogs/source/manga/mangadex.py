@@ -72,7 +72,8 @@ class MangaDex:
                 mangas = json.loads(response.text)["data"]
                 for manga in mangas:
                     manga_id = manga["id"]
-                    title = manga["attributes"]["title"]["en"]
+                    title_object = manga["attributes"]["title"]
+                    title = title_object["en"] if "en" in title_object else list(title_object.values())[0]
                     new_sources = []
                     sources = source_map[manga_id]
                     for source in sources:
